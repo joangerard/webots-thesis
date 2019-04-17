@@ -12,7 +12,8 @@ class Odometry:
         self.scaling_factor = .8662
         # self.scaling_factor = .8662
         self.wheels_state = WheelsState()
-        self.coordinate = Coordinate(0, 0, 6.19)
+        # angle adjustment to coordinates x, y
+        self.coordinate = Coordinate(0, 0, 6.1882401554323)
 
         self.wheels_state.pos_left_prev = int(pos_left)
         self.wheels_state.pos_right = int(pos_right)

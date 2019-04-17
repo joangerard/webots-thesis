@@ -4,6 +4,7 @@
 #  from controller import Robot, LED, DistanceSensor
 from controller import Supervisor
 from odometry import Odometry
+from data_collector import DataCollector
 import matplotlib.pyplot as plt
 import numpy as np
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -35,11 +36,15 @@ timestep = int(robot.getBasicTimeStep())
 
 x = []
 y = []
+theta = []
+distance_sensors_info = []
 
 x_odometry = []
 y_odometry = []
 theta_odometry = []
 sensorNames = ['ds0', 'ds1', 'ds2', 'ds3', 'ds4', 'ds5', 'ds6', 'ds7']
+
+data_collector = DataCollector()
 
 def init():
     compass.enable(timestep)
@@ -70,17 +75,32 @@ def get_bearing_degrees():
 def step():
     return (robot.step(timestep) != -1)
     
-def get_supervisor_coordinates():
+def save_supervisor_coordinates():
     # true robot position information
     trans_info = robot_trans.getSFVec3f()
     x_coordinate, y_coordinate = robot_to_xy(trans_info[2], trans_info[0])
     x.append(x_coordinate)
     y.append(y_coordinate)
+    theta.append((get_bearing_degrees()))
 
-def get_odometry_coordinates(coordinate):
+
+def save_odometry_coordinates(coordinate):
+    # convert robot coordinates into global coordinate system
     x_odometry.append(1 - coordinate.x)
     y_odometry.append(0.75 - coordinate.y)
-    theta_odometry.append(coordinate.theta)
+    theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta))
+
+def save_sensor_distances(distanceSensors):
+    distances = []
+    for distanceSensor in distanceSensors:
+        distance = distanceSensor.getValue()
+
+        #there is no real messure.
+        if distance == 10:
+            distance = None
+        distances.append(distance)
+    distance_sensors_info.append(distances)
+
 
 def get_sensor_distance():
     # Read the sensors, like:
@@ -91,7 +111,8 @@ def get_sensor_distance():
         sensor.enable(timestep)
         distanceSensors.append(sensor)
     return distanceSensors
-    
+
+
 def calculate_velocity(distanceSensors):
     # Process sensor data here
     sensorValues = [distanceSensor.getValue() for distanceSensor in distanceSensors]
@@ -101,7 +122,7 @@ def calculate_velocity(distanceSensors):
   
     left_speed = .5 * MAX_SPEED
     right_speed = .5 * MAX_SPEED
-    # avoiid collitoin
+    # avoid collition
     if leftObstacle:
         left_speed += .7 * MAX_SPEED
         right_speed -= .7 * MAX_SPEED
@@ -110,6 +131,15 @@ def calculate_velocity(distanceSensors):
         right_speed += .7 * MAX_SPEED
         
     return left_speed, right_speed
+
+
+def convert_angle_to_xy_coordinates(angle):
+    angle = angle*180/np.pi
+    angle = angle - 180
+    if angle < 0.0:
+        angle += 360
+    return angle
+
 
 def plot():
     # Enter here exit cleanup code.
@@ -122,9 +152,9 @@ def plot():
     plt.title("Robot position estimation")
     plt.legend()
     plt.savefig("results/position.png")
-    
-def main():
 
+
+if __name__ == '__main__':
     init()
     step()
     odometry = Odometry(ENCODER_UNIT * (positionLeft.getValue()),
@@ -136,12 +166,20 @@ def main():
                                           ENCODER_UNIT * (positionRight.getValue()))
 
         if not step():
+            # print('saving data')
+            data_collector.collect(x_odometry, y_odometry, theta_odometry, x, y, theta, np.array(distance_sensors_info))
             plot()
-        get_supervisor_coordinates()
-        get_odometry_coordinates(odometry_info)
+
         distanceSensors = get_sensor_distance()
+
+        # collect data
+        save_sensor_distances(distanceSensors)
+        save_odometry_coordinates(odometry_info)
+        save_supervisor_coordinates()
+
+        # calculate new velocity
         left_speed, right_speed = calculate_velocity(distanceSensors)
         motorLeft.setVelocity(left_speed)
         motorRight.setVelocity(right_speed)
 
-main()
+
