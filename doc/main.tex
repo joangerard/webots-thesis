@@ -6,37 +6,76 @@
 \usepackage{subcaption}
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
 \usepackage{fancyhdr}
+\usepackage{listings}
 \pagestyle{fancy}
 \fancyhead{}
-\fancyhead[RO,LE]{Thesis Title}
+\fancyhead[RO,LE]{Machine Learning
+for simulated control tasks with Webots}
 \fancyfoot{}
 \fancyfoot[LE,RO]{\thepage}
 \fancyfoot[LO,CE]{Chapter \thechapter}
-\fancyfoot[CO,RE]{Author Name}
+\fancyfoot[CO,RE]{Joan Gerard}
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
-\usepackage[style=authoryear,sorting=none]{biblatex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CODE STYLE CONFIG
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{color}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    aboveskip=20pt,
+    belowskip=15pt
+}
+ 
+\lstset{style=mystyle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% IMAGES PATH
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\images}{images/}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PARAGRAPH SEPARATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{0pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHIC REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[sorting=none]{biblatex}
 \addbibresource{references.bib}
 
-\title{Thesis Title}
-\author{Author Name}
-\date{Day Month Year}
+\title{Preparatory work for the Master Thesis}
+\author{Joan Gerard}
+\date{Academic year 2019}
 
 \begin{document}
 
 \input{titlepage}
 
-\input{abstract}
-
-\chapter*{Dedication}
-To mum and dad
-
-\chapter*{Declaration}
-I declare that..
-
-\chapter*{Acknowledgements}
-I want to thank...
+%\input{abstract}
 
 \tableofcontents
 
@@ -47,21 +86,21 @@ I want to thank...
 \chapter{Introduction}
 \input{chapters/introduction}
 
-\chapter{Chapter Two Title}
-\input{chapters/chapter02}
+\chapter{State of the art}
+\input{chapters/state-of-art}
 
-\chapter{Chapter Three Title}
-\input{chapters/chapter03}
+%\chapter{Chapter Three Title}
+%\input{chapters/chapter03}
 
-\chapter{Chapter Four Title}
-\input{chapters/chapter04}
+%\chapter{Chapter Four Title}
+%\input{chapters/chapter04}
 
-\chapter{Conclusion}
-\input{chapters/conclusion}
+%\chapter{Conclusion}
+%\input{chapters/conclusion}
 
-\appendix
-\chapter{Appendix Title}
-\input{chapters/appendix}
+%\appendix
+%\chapter{Appendix Title}
+%\input{chapters/appendix}
 
 \printbibliography
 

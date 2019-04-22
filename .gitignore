@@ -8,3 +8,9 @@ __pycache__
 *.toc
 *.synctex*
 *.run.xml
+*.bib
+*.blg
+*.bbl
+*.fdb_*
+*.fls*
+*robot_info_dataset.csv
