@@ -4,16 +4,17 @@ import numpy as np
 
 
 class Odometry:
-    def __init__(self, pos_left, pos_right):
-        self.increments_per_tour = 855
-        self.axis_wheel_ratio = 1.935
+    def __init__(self, pos_left, pos_right, x=0, y=0, angle=0):
+        self.increments_per_tour = 1000
+        self.axis_wheel_ratio = 1.660
+        # self.axis_wheel_ratio = 1.935
         self.wheel_diameter_left = 0.05
         self.wheel_diameter_right = 0.05
-        self.scaling_factor = .8662
+        self.scaling_factor = 1.01
         # self.scaling_factor = .8662
         self.wheels_state = WheelsState()
         # angle adjustment to coordinates x, y
-        self.coordinate = Coordinate(0, 0, 6.1882401554323)
+        self.coordinate = Coordinate(x, y, 6.20 + angle)
 
         self.wheels_state.pos_left_prev = int(pos_left)
         self.wheels_state.pos_right = int(pos_right)

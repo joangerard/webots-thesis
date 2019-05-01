@@ -20,6 +20,9 @@ SAMPLING_PERIOD = 10
 MAX_X = 2
 MAX_Y = 1.5
 ENCODER_UNIT = 159.23
+INIT_X = 0.3
+INIT_Y = 0.3
+INIT_ANGLE =
 
 # create the Robot instance.
 robot = Supervisor()
@@ -57,10 +60,10 @@ def init():
 
 def robot_to_xy(x, y):
     return x+1, y+0.75
-    
+
 def xy_to_robot(x, y):
     return x-1, y-0.75
-    
+
 def get_bearing_degrees():
     north = compass.getValues()
     rad = np.arctan2(north[0], north[2])
@@ -74,7 +77,7 @@ def get_bearing_degrees():
 
 def step():
     return (robot.step(timestep) != -1)
-    
+
 def save_supervisor_coordinates():
     # true robot position information
     trans_info = robot_trans.getSFVec3f()
@@ -86,8 +89,8 @@ def save_supervisor_coordinates():
 
 def save_odometry_coordinates(coordinate):
     # convert robot coordinates into global coordinate system
-    x_odometry.append(1 - coordinate.x)
-    y_odometry.append(0.75 - coordinate.y)
+    x_odometry.append(1 + 2*INIT_X - coordinate.x)
+    y_odometry.append(0.75 + 2*INIT_Y - coordinate.y)
     theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta))
 
 def save_sensor_distances(distanceSensors):
@@ -105,7 +108,7 @@ def save_sensor_distances(distanceSensors):
 def get_sensor_distance():
     # Read the sensors, like:
     distanceSensors = []
-    
+
     for sensorName in sensorNames:
         sensor = robot.getDistanceSensor(sensorName)
         sensor.enable(timestep)
@@ -115,13 +118,14 @@ def get_sensor_distance():
 
 def calculate_velocity(distanceSensors):
     # Process sensor data here
-    sensorValues = [distanceSensor.getValue() for distanceSensor in distanceSensors]
-    
+    sensorValues = [distanceSensor.getValue() + np.random.normal(0, 0.0005) for distanceSensor in distanceSensors]
+
     rightObstacle = sensorValues[0] < 0.15 or sensorValues[1] < 0.15
     leftObstacle = sensorValues[6] < 0.15 or sensorValues[7] < 0.15
-  
+
     left_speed = .5 * MAX_SPEED
     right_speed = .5 * MAX_SPEED
+
     # avoid collition
     if leftObstacle:
         left_speed += .7 * MAX_SPEED
@@ -129,7 +133,7 @@ def calculate_velocity(distanceSensors):
     elif rightObstacle:
         left_speed -= .7 * MAX_SPEED
         right_speed += .7 * MAX_SPEED
-        
+
     return left_speed, right_speed
 
 
@@ -158,17 +162,19 @@ if __name__ == '__main__':
     init()
     step()
     odometry = Odometry(ENCODER_UNIT * (positionLeft.getValue()),
-                        ENCODER_UNIT * (positionRight.getValue()))
+                        ENCODER_UNIT * (positionRight.getValue()), INIT_X, INIT_Y, INIT_ANGLE)
 
     while(True):
 
         odometry_info = odometry.track_step(ENCODER_UNIT * (positionLeft.getValue()),
-                                          ENCODER_UNIT * (positionRight.getValue()))
+                                            ENCODER_UNIT * (positionRight.getValue()))
 
         if not step():
             # print('saving data')
             data_collector.collect(x_odometry, y_odometry, theta_odometry, x, y, theta, np.array(distance_sensors_info))
             plot()
+
+        print('Compass: ', get_bearing_degrees(), 'Odometry:', convert_angle_to_xy_coordinates(odometry_info.theta))
 
         distanceSensors = get_sensor_distance()
 
