@@ -116,6 +116,89 @@ Another powerful feature of Webots is to create a custom robot model from scratc
 
 A position sensor can be added into the devices property of a joint node in order to monitor it. In like manner a rotational motor node can be added for actuating it. Thus, putting all together a simplistic version of a custom robot can be created based on the tree information and properties given to the simulator.
 
+\subsubsection{Sensors and actuators}
+
+Webots has a wide range of generic and commercially available sensors that can be plugin into a custom robot. On the one side, the compass, distance sensor and position sensor are some few examples of generic sensors. On the other side, camera, lidar, radar and range finder sensors built by different manufacturers as Hokuyo, Velodyne and Microsoft are offered as subcategories of commercially available sensors. 
+
+\begin{itemize}
+\item{The \textbf{compass sensor} can be used to express the position of the virtual north as a 1, 2 or 3-axis vector in relation to the position of the robot. The virtual north can be specified in the WorldInfo node by the \verb|northDirection| field. The major fields that can be customized are: the xAxis, yAxis, zAxis, lookup table and resolution field. }
+\item{The \textbf{distance sensor} measures the distance between the sensor and an object throughout rays collision with objects. Webots models different types of distance sensors as: generic, infra-red, sonar and laser. All of these has a lookup table, number of rays cast by the sensor, aperture angle, gaussian width and resolution field that can be personalized according to the needs.}
+\item{A \textbf{position sensor} can be inserted into the device field of a Joint or a Track. It measures the mechanical joint position. Moreover, the noise and resolution of the sensor can be customized. This sensor is useful for estimating the position of a robot given the current position of a mechanical joint, this technique is known as Odometry.}
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+  	\includegraphics[width=\linewidth]{\images/chapter2/compass.png}
+  	\caption{Compass sensor}
+  	\label{fig:ch-2:compass}
+  \end{subfigure}
+  \vspace{0.00mm}
+  \begin{subfigure}[b]{0.3\linewidth}
+  	\includegraphics[width=\linewidth]{\images/chapter2/distance-sensor.png}
+  	\caption{Distance sensor}
+  	\label{fig:ch-2:distance-sensor}
+  \end{subfigure}
+  \vspace{0.00mm}
+  \begin{subfigure}[b]{0.3\linewidth}
+  	\includegraphics[width=\linewidth]{\images/chapter2/position-sensor.png}
+  	\caption{Position sensor}
+  	\label{fig:ch-2:position-sensor}
+  \end{subfigure}
+  \vspace{0.00mm}
+  \caption{Sensors}
+  \source{Webots documentation}
+  \label{fig:ch-2:sensors}
+\end{figure}
+
+Sensors have some fields in common. For instance, the resolution field that indicates the sensitivity of the measurement. When it is set to -1 means that it will measure the infinitesimal smallest perceived change. As another example, the lookup table is a field that maps a value from the sensor read data to another custom value. Additionally, the standard deviation noise introduced by the sensor can be specified for a given measure. 
+
+Table \ref{tab:ch-2:lookup} shows the possible values that can be associated with the lookup table field. The first column represents the data measured by the sensor, the second column is the mapped value and the third column represents the noise as a gaussian random number whose range is calculated as a percent of the response value\cite{cyberbotics}. For instance, for the row $[0.3, 50, 0.1]$ when the sensor senses an object to 0.3m of distance from the robot, it will return a value of $50 \pm 5$, where 5 represents the standard deviation, that is the $10\%$ of 50.
+\begin{table}[h!]
+\centering
+ \begin{tabular}{c c c} 
+ \hline
+ Value & Mapped value & Noise \\ [0.5ex] 
+ \hline\hline
+ 0 & 1000 & 0 \\ 
+ \hline
+0.1 & 1000 & 0.1 \\ 
+ \hline
+ 0.2 & 400 & 0.1 \\ 
+ \hline
+ 0.3 & 50 & 0.1 \\ 
+ \hline
+ 0.37 & 30 & 0 \\ 
+ \hline
+\end{tabular}
+\caption{Lookup table of distance sensor}
+\source{Webots documentation}
+\label{tab:ch-2:lookup}
+\end{table}
+
+Figure \ref{fig:ch-2:lookup} shows the relation between the current sensor values and the mapped values within the associated noise.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{\images/chapter2/lookuptable.png}
+  \caption{Sensor response versus obstacle distance}
+  \source{Webots documentation}
+  \label{fig:ch-2:lookup}
+\end{figure}
+
+
+Webots can simulate robotic actuators. Speakers, LEDs, linear and rotational motors are some examples. 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
