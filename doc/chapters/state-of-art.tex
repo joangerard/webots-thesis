@@ -227,18 +227,60 @@ The notation used to represent a state at time $t$ will be denoted as $x_t$.
 
 A robot can interact with the environment in two ways. First, it can modify the environment state using its actuators which are drivers acting as muscles that let the robot change its configuration\cite{Reza:Theory-of-applied-robotics}. For instance, a rotational motor is an actuator that can power a joint and thus changing the robot pose. As another example, a robotic arm can be used to move objects from one position to another. Second, a robot can sense the environment using its sensors which are elements, usually attached to the robot, for obtaining information about internal and environmental states \cite{Reza:Theory-of-applied-robotics} \cite{Thrun:2005:PR:1121596}. 
 
-The control data is information about the change of state in the environment\cite{Thrun:2005:PR:1121596}. It can be, for instance, the velocity or the acceleration of the robot at a given time $t$ and thus it will be represented as $u_t$.  The sensor data provided at time $t$ is denoted as $z_t$ and thus a sequence of sensor observations will be $z_1, z_2, ..., z_t$.
+The control data is information about the change of state in the environment\cite{Thrun:2005:PR:1121596}. It can be, for instance, the velocity or the acceleration of the robot at a given time $t$ and thus it will be represented as $u_t$.  The sensor data provided at time $t$ is denoted as $z_t$ and therefore a sequence of sensor observations will be $z_{1:t}= {z_1, z_2, ..., z_t}$.
 
-\subsection{Localisation methods}
+\subsection{Belief Representation}\label{ch-2:sub:belief-representation}
+
+A belief is a representation of the internal state of the robot about its position in the environment whereas the true state is where the robot truly is in the environment. In other words it is the probability that a robot at time $t$ is at location $x$ given previous sensor data $z_1, z_2, ..., z_t$ and previous control actions $u_1, u_2, ..., u_t$. A belief can be expressed as a single point or multiple points in the map. The former is known as single-hypothesis belief and the later as multiple-hypothesis belief\cite{Siegwart:intro-autonumous-robots}. Thus a belief assigns a probability to each location in the environment. The higher the probability, more approximate the position of the robot is to the true state in that specific location. Following Thrun et al. notation, a belief over a state variable $x_t$ will be denoted as $bel(x_t)$ which is the posterior density conditioned on all past measurements and control actions.
+
+\begin{equation}
+bel(x_t) = p(x_t | z_{1:t}, u_{1:t})
+\label{eq:ch2:bel-update}
+\end{equation}
+
+Equation \ref{eq:ch2:bel-posterior} shows the posterior without including the last measurement data. It is usually called $prediction$ in the probabilistic filtering area.
+
+\begin{equation}
+\overline{bel}(x_t) = p(x_t | z_{1:t-1}, u_{1:t})
+\label{eq:ch2:bel-posterior}
+\end{equation}
+
+The probability $bel(x_t)$ can be calculated using the previous posterior belief before measurement $z_t$ and after taking action $u_t$, that is $\overline{bel}(x_t)$. This is known as correction\cite{Thrun:robotic-statistics}. 
+
+\subsection{The Markov Property}
+
+The $Markov Property$ states that a future state depends on the present state only and thus it resumes all the past states information.
+
+Formally, let $x_t$ be a stochastic discrete process that can take on a discrete set of values, where $t \in \mathbb{N}$. A value in process $x_t$ has the \textit{Markov Property} if for all $t$ such that $t\geq1$, the probability distribution of $x_{t+1}$ is determined by the state $x_t$ of the process at time $t$, and does not rely on past values $x_t$ for $t = 0, 1, ..., t - 1$\cite{Privault:markov-chains}. That is:
+
+\begin{equation}
+p(x_{t+1} | x_t, x_{t-1}, ..., x_0) = p(x_{t+1} | x_t)
+\end{equation}
+
+The Markov Property is an approximation, very well known in mobile robotics since it simplifies tracking, reasoning and planning and hence it has been found to be very robust for such applications\cite{Siegwart:intro-autonumous-robots}. 
+
+
+\subsection{Localisation Methods}
+
+Navigation is about controlling and operating the course of a robot and it is one of the most challenging skills that a mobile robot needs to master in order to successfully moving through the environment. According to Siegwart et al.\cite{Siegwart:intro-autonumous-robots} what is important for a robot to succeed in navigation is to succeed likewise in these four blocks of navigation:
+
+\begin{itemize}
+\item \textit{Sense:} the robot perceives the environment though its sensors and extract meaningful data in order to process and obtain information.
+\item \textit{Localisation:} the robot knows where it is in the environment.
+\item \textit{Cognition:} the robot creates an execution plan in how to act to reach its goals.
+\item \textit{Control Action:} the robot executes the execution plan through modulating its output motors.
+\end{itemize}
+
+Sensors and actuators take part in determining the robot's localisation but both are subjected to noise and thus the problem of localisation becomes difficult. Another problem with sensors is that they usually does not provide enough information content to determine the position of the robot and therefore make it easy for the robot to be in an ambiguous location. This problem is known as sensor aliasing and along with sensors and actuators noise turns the localisation problem into a difficult task.
 
 There are two types of localisation methods categorized by the increased degree of difficulty as stated in Ferreira et al.\cite{Ferreira:prob}: 
 
 \begin{itemize}
-\item \textit{Local techniques} (also called position tracking\cite{Thrun:2005:PR:1121596}), when the robot knows its initial position and it is not able to recover if the robot loses track of it.
-\item \textit{Global techniques} (see also \cite{Feng:where-am-I}), when the robot does not have any information about its initial position and it is able to estimate it even in a global uncertainty. This technique includes the \textit{kidnapped robot problem} in which a robot that knows its position is kidnapped and take it into another unknown location and its task is to recover its position. According to Thrun et al.\cite{Thrun:2005:PR:1121596} the later should be categorized as a third localisation technique given its difficulty.
+\item \textit{Local techniques} (also called position tracking\cite{Thrun:2005:PR:1121596}), when the robot knows its initial position and it is not able to recover it if the robot loses track of it.
+\item \textit{Global techniques} (see also \cite{Feng:where-am-I}), when the robot does not have any information about its initial position and it is able to estimate it even in a global uncertainty. This technique includes the \textit{kidnapped robot problem} in which a robot that knows its position is kidnapped and take it into another unknown location and its task is to recover its position. According to Thrun et al.\cite{Thrun:2005:PR:1121596} the later should be categorized as a third localisation technique given its difficulty. This technique is more powerful than the former because it deals with global uncertainty and consequently a robot is able to recover its position even if its error is significant.
 \end{itemize}
 
-Under the probabilistic approach, the robot’s momentary estimate, which represents its internal knowledge about the state of the environment (known as belief), is represented by a probability density function over the space of all locations\cite{Thrun:robotic-statistics}. That means that a robot can handle multiple ambiguous positions. After moving it can sense other factors in the environment that can lead to disambiguate its pose and put most of the probability in a single location and therefore having a better idea of where truly is. A more extensive and explicative example can be found in \cite{Thrun:robotic-statistics} and \cite{Liao:bayesian-filters} where the global localization problem is illustrated in a one-dimension space with a robot that has an hypothetical sensor that senses the presence of doors, when the robot finds the first door, the probability is distributed to all the places where there are doors (see figure \ref{fig:ch-2:sensors}). Thus the probability to be near a door is higher when the sensor detects a door but the robot does not know at this point which door is facing. Moving the robot forward makes the sensor to sense another door and thus increasing the probability of being at the second door. This illustrates some important properties of Bayes Filters that are going to be developed in more detail hereunder.
+Local techniques approximate the pose using unimodal techniques contrary to global techniques where the robot’s internal knowledge about the state of the environment is represented by a probability density function (pdf) over the space of all locations\cite{Thrun:robotic-statistics}. That means that a robot can handle multiple ambiguous positions. After moving it can sense other factors in the environment that can lead to disambiguate its pose and put most of the probability in a single location and therefore having a better idea of where truly is. A more extensive and explicative example can be found in \cite{Thrun:robotic-statistics} and \cite{Liao:bayesian-filters} where the global localization problem is illustrated in a one-dimension space with a robot that has an hypothetical sensor that senses the presence of doors, when the robot finds the first door, the probability is distributed to all the places where there are doors (see figure \ref{fig:ch-2:sensors}). Thus the probability to be near a door is higher when the sensor detects a door but the robot does not know at this point which door is facing. Moving the robot forward makes the sensor to sense another door and thus increasing the probability of being at the second door. This example illustrates some important properties of the Bayes Filter.
 
 \begin{figure}[h!]
   \centering
@@ -255,23 +297,74 @@ Under the probabilistic approach, the robot’s momentary estimate, which repres
 \end{figure}
 
 
+\section{Bayes Filter}
 
+As claimed by Borriello et al. Bayes Filter is a statistically estimator of dynamic system's states based on noisy observations. In other words it is an algorithm that calculates beliefs distribution based on measurements and control data\cite{Thrun:2005:PR:1121596}. This is generally done in two steps as it was mentioned in section \ref{ch-2:sub:belief-representation}: the prediction and the correction step and thus each time a robot receives the sensors measurement data the robot controller software needs to compute the posterior densities shown in equation \ref{eq:ch2:bel-posterior} but notice that such task is computationally heavy and consequently its time complexity grows exponentially because the amount of sensors measurements increasing over time. A solution to this problem is to assume that such dynamic system has the Markovian Property. That is the future state $x_{t+1}$ depends on the present state $x_t$ because the assumption that $x_t$ carries all the needed information is made\cite{Liao:bayesian-filters}.
 
+Bayes filter algorithm is recursive. It needs the previous posterior distibution to calculate the current posterior distribution. The algorithm is described below.
 
+\IncMargin{1em}
+\begin{algorithm}
 
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$bel(x_{t-1})$, $u_t$, $z_t$}
+\Output{$bel(x_t)$}
+\BlankLine
 
+  \ForEach{state $x$ in $x_t$}{
+    $\overline{bel}(x_t)\leftarrow \int p(x_t | u_t, x_{t-1}) \: bel(x_{t-1}) dx_{t-1}$\\
+    ${bel}(x_t)\leftarrow \eta \: p(z_t | x_t) \: \overline{bel}(x_t)$\\
+  }
+  \Return $bel(x_t)$
+\caption{Bayes Filtering Algorithm\cite{Thrun:2005:PR:1121596}}
 
+\label{ch-2:algo:bayes-filter}
+\end{algorithm}\DecMargin{1em}
 
+The current posterior distribution is calculated as it is shown in equation \ref{eq:ch-2:bel-derivation}.
 
+\begin{equation}\label{eq:ch-2:bel-derivation}
+p(x_t| z_{1:t}, u_{1:t}) = \frac{p(z_t | x_t, z_{1:t-1}, u_{1:t}) \: p(x_t | z_{1:t-1}, u_{1:t})}{p(z_t | z_{1:t-1}, u_{1:t})}
+\end{equation}
 
+Where,
 
+\begin{itemize}
+\item $p(x_t | z_{1:t-1}, u_{1:t})$ is the prior distribution. That is the information of state $x_t$ before seen the observation at time $t$.
+\item $p(z_t | x_t, z_{1:t-1}, u_{1:t})$ is the likelihood model for the measurements. A causal, but noisy relationship\cite{Sarkka:bayesian-filters}. 
+\item $p(z_t | z_{1:t-1}, u_{1:t})$ is the normalization constant defined as $\eta$
+\end{itemize}
 
+Thus equation \ref{eq:ch-2:bel-derivation} can be summarized as follows:
 
+\begin{equation} \label{eq:ch-2:bel-derivation-2}
+p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t, z_{1:t-1}, u_{1:t}) \: p(x_t | z_{1:t-1}, u_{1:t})
+\end{equation}
 
+The prediction of observation $z_t$ based on the state $x_t$, the previous observation $z_{1:t-1}$ and the control action $u_{1:t}$ has a conditional independence regarding the previous observation and the control action because they do not aport any information to predict $z_t$. Thus the likelihood model for the measurements can be simplified as follows:
 
+\begin{equation}
+p(z_t | x_t, z_{1:t-1}, u_{1:t}) = p(z_t | x_t)
+\end{equation}
 
+Therefore equation \ref{eq:ch-2:bel-derivation-2} reduces to:
 
+\begin{equation} \label{eq:ch-2:bel-derivation-3}
+p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t) \: p(x_t | z_{1:t-1}, u_{1:t})
+\end{equation}
 
+In equation \ref{eq:ch-2:expand-prior-here} the prior distribution is expanded.
+
+\begin{equation}\label{eq:ch-2:expand-prior-here}
+p(x_t | z_{1:t-1}, u_{1:t}) = \int p(x_t | x_{t-1}, u_t) \: p(x_{t-1} | z_{1:t-1}, u_{1:t-1}) dx_{t-1}\\
+= \overline{bel}(x_t)
+\end{equation}
+
+Replacing equation \ref{eq:ch-2:expand-prior-here} in \ref{eq:ch-2:bel-derivation-3}, equation \ref{eq:ch-2:bel-derivation-4} is obtained which is calculated by the algorithm in list \ref{ch-2:algo:bayes-filter} third line.
+
+\begin{equation}\label{eq:ch-2:bel-derivation-4}
+p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t) \: \overline{bel}(x_t)
+\end{equation}
 
 
 
