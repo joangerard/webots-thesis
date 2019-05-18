@@ -5,6 +5,7 @@ class DataCollector:
 
     def __init__(self):
         self.path = 'results/robot_info_dataset.csv'
+        self.read_path = 'results/robot_info_dataset-lolz.csv'
 
     def collect(self, estimated_x, estimated_y, estimated_theta, real_x, real_y, real_theta, distances):
         data = {
@@ -25,9 +26,9 @@ class DataCollector:
         }
 
         df = pd.DataFrame(data)
+
         df.to_csv(self.path)
         print('data collected in', self.path)
 
-
     def get_data_frame(self):
-        return pd.read_csv(self.path)
+        return pd.read_csv(self.read_path)

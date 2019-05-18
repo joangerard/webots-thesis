@@ -5,7 +5,7 @@ Webots is a robot simulation tool that was created in the Swiss Federal Institut
 
 Webots was used for different research projects using machine-learning techniques. Szab\'{o}, for instance, created a module for metric navigation using a modification of the Khepera robot. The objective was to build a map of a few-square-meter size environment with some obstacles on it \cite{szabo}. Szab\'{o} used these steps to build his module: sensor interpretation, integration over time, pose estimation, global grid build and exploration (See \cite{thrun-1}).
 
-The robot pose over the space environment is uncertain and it becomes difficult to estimate as a result of non-systematic errors. Even though it can be approximated using odometry techniques as it is shown in Szab\'{o} work, as times goes the estimated position is phased out due to the error accumulation until it becomes useless. The use of parametric and non-parametric filters can be useful to reduce this error. Thus, the long-term objective of the master thesis will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters for robot positioning estimation, independently to the kind of robot used. The selected programming language is Python 3.7 in a MacOS environment.
+The robot pose over the space environment is uncertain and it becomes difficult to estimate as a result of non-systematic errors. Even though it can be approximated using odometry techniques as it is shown in Szab\'{o} work, as times goes the estimated position is phased out due to the error accumulation until it becomes useless. The use of parametric and non-parametric filters can be useful to reduce this error. Thus, the long-term objective of the master thesis will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters for robot positioning estimation, independently to the kind of robot used for in-door environments. The selected programming language is Python 3.7 in a MacOS environment.
 
 The purpose of this work is to present the state of the art, to show an introduction to Webots tool and non-parametric filters. 
 \section{Notations}
@@ -15,10 +15,18 @@ $t \in \mathbb{Q}$ & Discrete or continuos time\\
 $x_t \in \mathbb{R}$ & State $x$ at time $t$\\
 $z_t \in \mathbb{R}$  & Measurement $z$ at time $t$\\
 $u_t \in \mathbb{R}$ & Action $u$ at time $t$\\
+$\theta_t \in \mathbb{R}$ & Angle of orientation at time $t$\\
 $bel(x_t)$ & Belief of state $x$ at time $t$\\
+$\overline{bel}(x_t)$ & Prediction belief of state $x$ at time $t$\\
 $p(x)$ & Probability of continuous or discrete random variable $x$\\
 $p(x | y)$ & Conditional probability of $x$ given $y$\\
 $x_{1:t}$ & Sequence containing $\{x_1, x_2, ..., x_t\}$\\ 
+$M$ & Number of Particles used in the Particles Filter\\
+$x_t^{[m]}$ & State $x$ at time $t$ of particle $m$\\
+$\mathbf{\hat{x}_{t}}$ & Predicted state at time $t$\\
+$a \approx b$ & $a$ is approximately equal to $b$\\
+$a \sim b$ & $a$ is similar to $b$\\
+$a \propto b$ & $a$ is proportional to $b$\\
 \end{tabular}
 \end{flushleft}
 
@@ -30,6 +38,19 @@ ROS & Robot Operative System\\
 3D & Three-Dimensional\\
 DOF & Degrees Of Freedom\\
 pdf & Probability Density Function\\
+KF & Kalman Filter\\
+PF & Particles Filter\\
+EKF & Extended Kalman Filter\\
+MCKF & Maximum Correntropy Kalman Filter\\
+MMSE & Minimum Mean Square Error\\
+MCC & Maximum Correntropy Criterion\\
+IEKF & Invariant Extended Kalman Filter\\
+PCC & Pearson Correlation Coefficient\\
+PPF & Pearson Particles Filter\\
+GPU & Grafical Processing Unit\\
+GPGPU & General Purpose Graphical Processing Unit\\
+MCL & Monte Carlo localization\\
+SLAM & Simultaneous Localization And Mapping Problem\\
 \end{tabular}
 \end{flushleft}
 

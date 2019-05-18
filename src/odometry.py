@@ -6,7 +6,8 @@ import numpy as np
 class Odometry:
     def __init__(self, pos_left, pos_right, x=0, y=0, angle=0):
         self.increments_per_tour = 1000
-        self.axis_wheel_ratio = 1.660
+        # self.axis_wheel_ratio = 1.660
+        self.axis_wheel_ratio = 1.885
         # self.axis_wheel_ratio = 1.935
         self.wheel_diameter_left = 0.05
         self.wheel_diameter_right = 0.05
@@ -14,7 +15,7 @@ class Odometry:
         # self.scaling_factor = .8662
         self.wheels_state = WheelsState()
         # angle adjustment to coordinates x, y
-        self.coordinate = Coordinate(x, y, 6.20 + angle)
+        self.coordinate = Coordinate(x, y, angle - 0.0946)
 
         self.wheels_state.pos_left_prev = int(pos_left)
         self.wheels_state.pos_right = int(pos_right)

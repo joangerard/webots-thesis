@@ -5,8 +5,10 @@
 from controller import Supervisor
 from odometry import Odometry
 from data_collector import DataCollector
+from predictor import Predictor
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # hello = tf.constant("hello TensorFlow!")
@@ -20,11 +22,16 @@ SAMPLING_PERIOD = 10
 MAX_X = 2
 MAX_Y = 1.5
 ENCODER_UNIT = 159.23
-INIT_X = 0.3
-INIT_Y = 0.3
-INIT_ANGLE =
+INIT_X = 0.0
+INIT_Y = 0.0
+INIT_ANGLE = 0
+PRED_STEPS = 450
+correction_x = 0
+correction_y = 0
+correction_theta = 0
 
 # create the Robot instance.
+
 robot = Supervisor()
 robot_sup = robot.getFromDef("e-puck")
 robot_trans = robot_sup.getField("translation")
@@ -34,6 +41,8 @@ motorRight = robot.getMotor("right wheel motor")
 
 positionLeft = robot.getPositionSensor("left wheel sensor")
 positionRight = robot.getPositionSensor("right wheel sensor")
+
+predictor = Predictor()
 
 timestep = int(robot.getBasicTimeStep())
 
@@ -46,6 +55,10 @@ x_odometry = []
 y_odometry = []
 theta_odometry = []
 sensorNames = ['ds0', 'ds1', 'ds2', 'ds3', 'ds4', 'ds5', 'ds6', 'ds7']
+
+x_pred = []
+y_pred = []
+theta_pred = []
 
 data_collector = DataCollector()
 
@@ -89,9 +102,9 @@ def save_supervisor_coordinates():
 
 def save_odometry_coordinates(coordinate):
     # convert robot coordinates into global coordinate system
-    x_odometry.append(1 + 2*INIT_X - coordinate.x)
-    y_odometry.append(0.75 + 2*INIT_Y - coordinate.y)
-    theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta))
+    x_odometry.append(1 + 2*INIT_X - coordinate.x + correction_x)
+    y_odometry.append(0.75 + 2*INIT_Y - coordinate.y + correction_y)
+    theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta) + correction_theta)
 
 def save_sensor_distances(distanceSensors):
     distances = []
@@ -118,7 +131,7 @@ def get_sensor_distance():
 
 def calculate_velocity(distanceSensors):
     # Process sensor data here
-    sensorValues = [distanceSensor.getValue() + np.random.normal(0, 0.0005) for distanceSensor in distanceSensors]
+    sensorValues = [distanceSensor.getValue() + np.random.normal(0, 0.1) for distanceSensor in distanceSensors]
 
     rightObstacle = sensorValues[0] < 0.15 or sensorValues[1] < 0.15
     leftObstacle = sensorValues[6] < 0.15 or sensorValues[7] < 0.15
@@ -153,9 +166,47 @@ def plot():
     plt.ylabel("y")
     plt.plot(x, y, label="real")
     plt.plot(x_odometry, y_odometry, label="odometry")
+    plt.plot(x_pred, y_pred, 's', label="correction", marker='o')
     plt.title("Robot position estimation")
     plt.legend()
-    plt.savefig("results/position.png")
+    plt.savefig("results/position.eps", format='eps')
+
+
+def predict(x, y, theta, sensors_data):
+    predictions = []
+    errors = []
+    interval = 10
+    interval_angle = 3
+
+    xrange = [l/100 for l in range(max(0, int(x*100) - interval), min(MAX_X*100, int(x*100) + interval), 1)]
+    yrange = [l/100 for l in range(max(0, int(y*100) - interval), min(int(MAX_Y*100), int(y*100) + interval), 1)]
+    thetarange = [l for l in range(max(0, int(theta) - interval_angle), min(360, int(theta) + interval_angle), 1)]
+
+    print("XRANGE------------------")
+    print(x)
+    print(xrange)
+
+    print("YRANGE------------------")
+    print(y)
+    print(yrange)
+
+    print("THETARANGE------------------")
+    print("theta: ", theta)
+    print(thetarange)
+
+    for i in xrange:
+        for j in yrange:
+            for k in thetarange:
+                est, bad_data = predictor.predict(i, j, k, sensors_data)
+                if not bad_data:
+                    predictions.append([i, j, k])
+                    errors.append(math.log(est))
+
+    if len(errors) > 0:
+        ix = errors.index(min(errors))
+        return predictions[ix]
+
+    return -1
 
 
 if __name__ == '__main__':
@@ -163,6 +214,8 @@ if __name__ == '__main__':
     step()
     odometry = Odometry(ENCODER_UNIT * (positionLeft.getValue()),
                         ENCODER_UNIT * (positionRight.getValue()), INIT_X, INIT_Y, INIT_ANGLE)
+
+    count = 0
 
     while(True):
 
@@ -187,5 +240,21 @@ if __name__ == '__main__':
         left_speed, right_speed = calculate_velocity(distanceSensors)
         motorLeft.setVelocity(left_speed)
         motorRight.setVelocity(right_speed)
+
+        # correction step each 100 steps
+        if count % PRED_STEPS == 0:
+            pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
+            if pred != -1:
+                # save correction
+                x_pred.append(pred[0])
+                y_pred.append(pred[1])
+                theta_pred.append(pred[2])
+
+                # calculate correction
+                correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
+                correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
+                correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
+
+        count += 1
 
 
