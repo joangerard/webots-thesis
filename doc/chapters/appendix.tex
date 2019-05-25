@@ -16,7 +16,7 @@ Where,
 Thus equation \ref{eq:ch-2:bel-derivation} can be summarized as follows:
 
 \begin{equation} \label{eq:ch-2:bel-derivation-2}
-p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t, z_{1:t-1}, u_{1:t}) \: p(x_t | z_{1:t-1}, u_{1:t})
+p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t, z_{1:t-1}, u_{1:t}) \: p(x_t | z_{1:t-1}, u_{1:t}) 
 \end{equation}
 
 The prediction of observation $z_t$ based on the state $x_t$, the previous observation $z_{1:t-1}$ and the control action $u_{1:t}$ has a conditional independence regarding the previous observation and the control action because they do not aport any information while predicting $z_t$. Thus the likelihood model for the measurements can be simplified as follows:
@@ -43,3 +43,30 @@ Replacing equation \ref{eq:ch-2:expand-prior-here} in \ref{eq:ch-2:bel-derivatio
 \begin{equation}\label{eq:ch-2:bel-derivation-4}
 p(x_t| z_{1:t}, u_{1:t}) = \eta \: p(z_t | x_t) \: \overline{bel}(x_t)
 \end{equation}
+
+
+\section{Correction State Algorithm in Python}\label{sec:ap:correction-state-algo}
+The complete file can be found on GitHub
+\footnote{\hyperref[obstacle_avoid_test.py]{https://github.com/joangerard/webots-thesis/blob/master/src}}.
+
+\lstinputlisting[language=Python, firstline=175, lastline=211]{\code/ch-3/obstacle_avoid_test.py}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

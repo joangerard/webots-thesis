@@ -1,7 +1,7 @@
 \section{Webots}
-Webots was created by Cyberbotics Ltd. a spin-off company from the EPFL and has been developing it since 1998. It currently\footnote{2019} employs 6 people in Lausanne, Switzerland to continuously develop Webots according to customers needs. Cyberbotics provides consulting on both industrial and academic research projects and delivers open-source software solutions to its customers. It also provides user support and training to the users of the Webots software. The source code and binary packages are available for free; however, user support and consultancy are not. It is available for Windows, Ubuntu Linux and MacOS \cite{cyberbotics}.
+Webots was created by Cyberbotics Ltd. a spin-off company from the EPFL. It has been developing it since 1998. The company currently\footnote{2019} employs 6 people in Lausanne, Switzerland to continuously develop Webots according to customers needs. Cyberbotics provides consulting on both industrial and academic research projects and delivers open-source software solutions to its customers. It also provides user support and training to the users of the Webots software. The source code and binary packages are available for free; however, user support and consultancy are not. It is available for Windows, Ubuntu Linux and MacOS \cite{cyberbotics}.
 
-Webots website has a reference manual that describes nodes and API functions. It has a complete user guide as well endowed with examples of simulations that show the use of actuators, creation of different environments, geometries primitives, complex behaviors, functionalities and advanced 3D rendering capabilities. This section is oriented to describe the basics of Webots and it is focused on what will be useful to develop the project. For a detailed description please refer to the user guide\footnote{\url{https://cyberbotics.com/doc/guide/index}} or the reference manual\footnote{\url{https://cyberbotics.com/doc/reference/index}}.
+Webots website has a reference manual that describes nodes and API functions. It has a complete user guide as well endowed with examples of simulations that show the use of actuators, creation of different environments, geometries primitives, complex behaviors, functionalities and advanced 3D rendering capabilities. This section is oriented to describe the basics of Webots and is focused on what will be useful to develop the project. For a detailed description please refer to the user guide\footnote{\url{https://cyberbotics.com/doc/guide/index}} or the reference manual\footnote{\url{https://cyberbotics.com/doc/reference/index}}.
 
 \subsection{Graphic Interface}
 Webots supports the following programming languages: C, C++, Python, Java, MATLAB and ROS. Additionally, it offers the possibility of creating a custom interface to third-party software such as Lisp\textsuperscript{TM} or LabView\textsuperscript{TM} using TCP/IP protocol.
@@ -17,12 +17,12 @@ Figure \ref{fig-ch-2:interface} shows the main graphic interface of Webots. It c
 \begin{enumerate}
 	\item Simulation: graphic visualization of the simulated world objects.
 	\item Code visualization: robot controller code editor.
-	\item World Information: information about the simulated world.
+	\item World Information: information represented in a tree structure about the simulated world including the robot components (sensors, actuators, physical characteristics), world objects, textures, etc. 
 	\item Console: program execution output stream.
 	\item Control panel: set of buttons that controls the simulation execution.
 \end{enumerate}
 
-The program allows users to create highly personalized simulated environments which are called worlds, from scratch using pre-built 3D object models such as robots, wood boxes, walls, arenas, etc. A robot needs to be associated with a controller program that contains the source code with the desired behavior. This controller can be easily edited in the code panel and once it is saved it is automatically reloaded into all the robots associated with it. For running the simulation users can play, stop or reset it, among other options, using the control panel set of buttons. The output stream of the controller execution will be displayed in the console panel. 
+The program allows users to create highly personalized simulated environments which are called worlds, from scratch using pre-built 3D object models such as robots, wood boxes, walls, arenas, etc. A robot needs to be associated with a controller program that contains the source code with the desired behavior. This controller can be easily edited in the code panel and once it is saved it is automatically reloaded into all the robots associated with it. For running the simulation, users can play, stop or reset it, among other options, using the control panel set of buttons. The output stream of the controller execution will be displayed in the console panel. 
 
 
 \subsection{Webots with Python 3.7 and TensorFlow}
@@ -49,7 +49,7 @@ sess = tf.Session()
 print(sess.run(verifier))
 \end{lstlisting}
 
-If TensorFlow was correctly installed, after the execution of the simulation, a message in the console panel will be displayed informing about its correct installation.
+If TensorFlow is correctly installed, after the execution of the simulation, a message in the console panel will be displayed informing about its correct installation.
 
 
 \subsection{Robots and world creation}
@@ -115,12 +115,12 @@ Another powerful feature of Webots is to create a custom robot model from scratc
 
 A position sensor can be added into the devices property of a joint node in order to monitor it. In like manner a rotational motor node can be added for actuating it. Thus, putting all together a simplistic version of a custom robot can be created based on the tree information and properties given to the simulator.
 
-\subsection{Sensors}
+\subsection{Sensors}\label{sec:ch-2:sensors}
 
 Sensors allows the robot to sense the environment. Webots has a wide range of generic and commercially available sensors that can be plugged into a custom robot. On one side, the compass, distance sensor and position sensor are some few examples of generic sensors. On the other side, camera, lidar, radar and range finder sensors built by different manufacturers as Hokuyo, Velodyne and Microsoft are offered as subcategories of commercially available sensors. 
 
 \begin{itemize}
-\item{The \textbf{compass sensor} can be used to express the position of the virtual north as a 1, 2 or 3-axis vector in relation to the position of the robot. The virtual north can be specified in the WorldInfo node by the \verb|northDirection| field. The major fields that can be customized are: the xAxis, yAxis, zAxis, lookup table and resolution field. }
+\item{The \textbf{compass sensor} can be used to express the angle orientation of the robot over the position of the virtual north as a 1, 2 or 3-axis vector (roll, pitch and yaw angles). The virtual north can be specified in the WorldInfo node by the \verb|northDirection| field. The major fields that can be customized are: the xAxis, yAxis, zAxis, lookup table and resolution field. }
 \item{The \textbf{distance sensor} measures the distance between the sensor and an object throughout rays collision with objects. Webots models different types of distance sensors as: generic, infra-red, sonar and laser. All of these has a lookup table, number of rays cast by the sensor, aperture angle, gaussian width and resolution field that can be personalized according to the needs.}
 \item{A \textbf{position sensor} can be inserted into the device field of a Joint or a Track. It measures the mechanical joint position. Moreover, the noise and resolution of the sensor can be customized. This sensor is useful for estimating the position of a robot given the current position of a mechanical joint, this technique is known as Odometry.}
 \end{itemize}
@@ -193,7 +193,7 @@ Actuators allows the robot to modify the environment. Webots can simulate rotati
 
 Robotics, according to Thrun et al.\cite{Thrun:2005:PR:1121596}, is the science of perceiving and manipulating the physical world through computer-controlled mechanical devices and it is taking place in wide areas such as medicine\cite{Azad:STAR}, planet exploration\cite{Geoffrey:venus}, agriculture\cite{Shamshiri:research-agricultural}, construction\cite{Pileun:construction}, entertainment\cite{Morris:entertainment} among others. 
 
-The robotics that is known nowadays has being evolved across the years. From robotic systems designed to automatize highly repetitive and physically demanding human tasks in the early-to-mid-1940s\cite{Ferreira:prob}, passing through researches making the strong assumption of having exact models of robots and environments in the 1970s, to probabilistic robotics in the mid-1990s\cite{Thrun:robotic-statistics}. Thus a robot needs to deal with uncertainty most of the time. As an example, a robot ordered to walk 1 meter forward from its current position will not end up exactly 1 meter far from its initial position due to some errors, whether the robot speed was high and it slipped or the noise produced by the actuators is significant. That is why it needs to be capable to deal with uncertainty, predicting and preserving its current position and orientation within the environment\cite{Nikos:auxiliary-pf}.
+The robotics that is known nowadays has being evolved across the years. From robotic systems designed to automatize highly repetitive and physically demanding human tasks in the early-to-mid-1940s\cite{Ferreira:prob}, passing through researches making the strong assumption of having exact models of robots and environments in the 1970s, to probabilistic robotics in the mid-1990s\cite{Thrun:robotic-statistics}. Thus a robot needs to deal with uncertainty most of the time. As an example, a robot ordered to walk 1 meter forward from its current position will not end up exactly 1 meter far from its initial position due to some errors, if the robot speed was high and it slipped or the noise produced by the actuators is significant. That is why it needs to be capable to deal with uncertainty, predicting and preserving its current position and orientation within the environment\cite{Nikos:auxiliary-pf}.
 
 \subsection{State}
 
@@ -231,7 +231,7 @@ The control data is information about the change of state in the environment\cit
 
 \subsection{Belief Representation}\label{ch-2:sub:belief-representation}
 
-A belief is a representation of the internal state of the robot about its position in the environment whereas the true state is where the robot truly is in the environment. In other words it is the probability that a robot at time $t$ is at location $x$ given previous sensor data $z_1, z_2, ..., z_t$ and previous control actions $u_1, u_2, ..., u_t$. A belief can be expressed as a single point or multiple points in the map. The former is known as single-hypothesis belief and the later as multiple-hypothesis belief\cite{Siegwart:intro-autonumous-robots}. Thus a belief assigns a probability to each location in the environment. The higher the probability, more approximate the position of the robot is to the true state in that specific location. Following Thrun et al. notation, a belief over a state variable $x_t$ will be denoted as $bel(x_t)$ which is the posterior density conditioned on all past measurements and control actions.
+A belief is a representation of the internal state of the robot about its position in the environment whereas the true state is where the robot truly is in the environment. In other words it is the probability that a robot at time $t$ is at location $x$ given previous sensor data $z_1, z_2, ..., z_t$ and previous control actions $u_1, u_2, ..., u_t$. A belief can be expressed as the conditional probability function of state $x_t$ given sensor data $z_{1:t} \text{ and control actions } u_{1:t}$. Thus it assigns a probability to each location in the environment, dealing with a single-hypothesis belief (robot tracks a single possible solution) or multiple-hypothesis beliefs (robot tracks an infinite set of positions)\cite{Siegwart:intro-autonumous-robots}. Following Thrun et al. notation, a belief over a state variable $x_t$ will be denoted as $bel(x_t)$ which is the posterior density conditioned on all past measurements and control actions.
 
 \begin{equation}
 bel(x_t) = p(x_t | z_{1:t}, u_{1:t})
@@ -247,6 +247,8 @@ Equation \ref{eq:ch2:bel-posterior} shows the posterior without including the la
 
 The probability $bel(x_t)$ can be calculated using the previous posterior belief before measurement $z_t$ and after taking action $u_t$, that is $\overline{bel}(x_t)$. This is known as correction\cite{Thrun:robotic-statistics}. 
 
+The relation between equation \ref{eq:ch2:bel-update} and \ref{eq:ch2:bel-posterior} is shown in appendix \ref{eq:ch-2:bel-derivation}.
+
 \subsection{The Markov Property}
 
 The $Markov Property$ states that a future state depends on the present state only and thus it resumes all the past states information.
@@ -257,7 +259,7 @@ Formally, let $x_t$ be a stochastic discrete process that can take on a discrete
 p(x_{t+1} | x_t, x_{t-1}, ..., x_0) = p(x_{t+1} | x_t)
 \end{equation}
 
-The Markov Property is an approximation, very well known in mobile robotics since it simplifies tracking, reasoning and planning and hence it has been found to be very robust for such applications\cite{Siegwart:intro-autonumous-robots}. 
+The Markov Property is an approximation, commonly used in mobile robotics since it simplifies tracking, reasoning and planning and hence it has been found to be very robust for such applications\cite{Siegwart:intro-autonumous-robots}. 
 
 
 \subsection{Localization Methods}
@@ -280,7 +282,7 @@ There are two types of localization methods categorized by the increased degree 
 \item \textit{Global techniques} (see also \cite{Feng:where-am-I}), when the robot does not have any information about its initial position and it is able to estimate it even in a global uncertainty. This technique includes the \textit{kidnapped robot problem} in which a robot that knows its position is kidnapped and take it into another unknown location and its task is to recover its position. According to Thrun et al.\cite{Thrun:2005:PR:1121596} the later should be categorized as a third localization technique given its difficulty. This technique is more powerful than the former because it deals with global uncertainty and consequently a robot is able to recover its position even if its error is significant.
 \end{itemize}
 
-Local techniques approximate the pose using unimodal techniques contrary to global techniques where the robot’s internal knowledge about the state of the environment is represented by a probability density function (pdf) over the space of all locations\cite{Thrun:robotic-statistics}. That means that a robot can handle multiple ambiguous positions. After moving it can sense other factors in the environment that can lead to disambiguate its pose and put most of the probability in a single location and therefore having a better idea of where truly is. A more extensive and explicative example can be found in \cite{Thrun:robotic-statistics} and \cite{Liao:bayesian-filters} where the global localization problem is illustrated in a one-dimension space with a robot that has an hypothetical sensor that senses the presence of doors, when the robot finds the first door, the probability is distributed to all the places where there are doors (see figure \ref{fig:ch-2:sensors}). Thus the probability to be near a door is higher when the sensor detects a door but the robot does not know at this point which door is facing. Moving the robot forward makes the sensor to sense another door and thus increasing the probability of being at the second door. This example illustrates some important properties of the Bayes Filter.
+Local techniques approximate the pose using unimodal techniques contrary to global techniques where the robot’s internal knowledge about the state of the environment is represented by a probability density function (pdf) over the space of all locations\cite{Thrun:robotic-statistics}. An example of a global technique is shown in section \ref{sec:ch-2:particles-filter} where a robot handles multiple ambiguous positions. Then after moving, it can sense other factors in the environment that can lead to disambiguate its pose and put most of the probability in a single location and therefore having a better idea of where truly is as image \ref{fig:ch-2:particles-ex} illustrates. A more extensive and explicative example can be found in \cite{Thrun:robotic-statistics} and \cite{Liao:bayesian-filters} where the global localization problem is illustrated in a one-dimension space with a robot that has an hypothetical sensor that senses the presence of doors, when the robot finds the first door, the probability is distributed to all the places where there are doors (see figure \ref{fig:ch-2:sensors}). Thus the probability to be near a door is higher when the sensor detects a door but the robot does not know at this point which door is facing. Moving the robot forward makes the sensor to sense another door and thus increasing the probability of being at the second door. This example illustrates some important properties of the Bayes Filter.
 
 \begin{figure}[h!]
   \centering
@@ -297,9 +299,9 @@ Local techniques approximate the pose using unimodal techniques contrary to glob
 \end{figure}
 
 
-\subsection{Bayes Filter}
+\subsection{Bayes Filter}\label{sec:ch-2:bayes-filter}
 
-As claimed by Borriello et al. Bayes Filter is a statistically estimator of dynamic system's states based on noisy observations. In other words it is an algorithm that calculates beliefs distribution based on measurements and control data\cite{Thrun:2005:PR:1121596}. This is generally done in two steps as it was mentioned in section \ref{ch-2:sub:belief-representation}: the prediction and the correction step and thus each time a robot receives the sensors measurement data the robot controller software needs to compute the posterior densities shown in equation \ref{eq:ch2:bel-posterior} but notice that such task is computationally heavy and consequently its time complexity grows exponentially because the amount of sensors measurements increasing over time. A solution to this problem is to assume that such dynamic system has the Markovian Property. That is the future state $x_{t+1}$ depends on the present state $x_t$ because the assumption that $x_t$ carries all the needed information is made\cite{Liao:bayesian-filters}.
+As claimed by Borriello et al.\cite{Liao:bayesian-filters} Bayes Filter is a statistically estimator of dynamic system's states based on noisy observations. In other words it is an algorithm that calculates beliefs distribution based on measurements and control data\cite{Thrun:2005:PR:1121596}. This is generally done in two steps as it was mentioned in section \ref{ch-2:sub:belief-representation}: the prediction and the correction step and thus each time a robot receives the sensors measurement data the robot controller software needs to compute the posterior densities shown in equation \ref{eq:ch2:bel-posterior} but notice that such task is computationally heavy and consequently its time complexity grows exponentially because the amount of sensors measurements increasing over time. A solution to this problem is to assume that such dynamic system has the Markovian Property. That is the future state $x_{t+1}$ depends on the present state $x_t$ because the assumption that $x_t$ carries all the needed information is made.
 
 Bayes filter algorithm is recursive. It needs the previous posterior distribution to calculate the current posterior distribution. The algorithm is described below and its correctness is shown in appendix \ref{sec:ap:bayes-filter}.
 
@@ -330,7 +332,7 @@ There are many algorithms that apply Bayes Filtering. Some examples are stated b
 \item The \textit{Particles Filter} (PF) according to Rekleitis, uses many copies of the variable of interest, each of them is associated with a weight representing the quality of that specific particle. Each particle executes the same control action plus some noise, they are reevaluated, its weight is recalculated and therefore the particles with low weight are eliminated in a process called resampling\cite{Rekleitis:particles-filter}.
 \end{itemize}
 
-\subsection{Particles Filter}
+\subsection{Particles Filter}\label{sec:ch-2:particles-filter}
 
 Particles Filter is a nonparametric implementation of the Bayes Filter algorithm where the posterior is approximated by a set of $M$ samples called \textit{particles} where $M$ is usually a large number(e.g. 2000). Under the context of localization, it is also known as Monte Carlo localization (MCL)\cite{Thrun00j}. Each particle has associated a weight that represents the contribution to the overall estimate of the posterior\cite{Rekleitis:particles-filter}. Thus equation \ref{eq:ch-2:particles}  shows the believe at time $t$ approximated by a set of particles and weights of $M$ particles.
 
