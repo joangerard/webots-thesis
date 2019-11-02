@@ -14,3 +14,7 @@ __pycache__
 *.fdb_*
 *.fls*
 *robot_info_dataset.csv
+webots-project/controllers/pos-prediction/thesis/bin/*
+webots-project/controllers/pos-prediction/thesis/lib/*
+webots-project/worlds/.*.wbproj
+webots-project/plugins/robot_windows/pos-prediction/node_modules/*
