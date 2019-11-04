@@ -1,5 +1,5 @@
 import numpy as np
-
+import random
 
 class MovementController:
     GOING_STRAIGHT = 0
@@ -9,7 +9,9 @@ class MovementController:
 
     MAX_SPEED = 6
     THRESHOLD_PROXIMITY = 0.15
-    THRESHOLD_PROB_TURN = 0.05
+    THRESHOLD_PROB_TURN = 0.01
+
+    SENSOR_ERROR = 0.1
 
     def __init__(self):
         self.status = self.GOING_STRAIGHT

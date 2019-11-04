@@ -28,7 +28,7 @@ ENCODER_UNIT = 159.23
 INIT_X = 0.0
 INIT_Y = 0.0
 INIT_ANGLE = 0
-PRED_STEPS = 450
+PRED_STEPS = 20
 correction_x = 0
 correction_y = 0
 correction_theta = 0
@@ -170,11 +170,11 @@ def plot():
 def predict(x, y, theta, sensors_data):
     predictions = []
     errors = []
-    interval = 10
-    interval_angle = 3
+    interval = 6
+    interval_angle = 6
 
-    xrange = [l/100 for l in range(max(0, int(x*100) - interval), min(MAX_X*100, int(x*100) + interval), 1)]
-    yrange = [l/100 for l in range(max(0, int(y*100) - interval), min(int(MAX_Y*100), int(y*100) + interval), 1)]
+    xrange = [l/100 for l in range(max(0, int(x*100) - interval), min(MAX_X*100, int(x*100) + interval), 2)]
+    yrange = [l/100 for l in range(max(0, int(y*100) - interval), min(int(MAX_Y*100), int(y*100) + interval), 2)]
     thetarange = [l for l in range(max(0, int(theta) - interval_angle), min(360, int(theta) + interval_angle), 1)]
 
     print("XRANGE------------------")
@@ -195,7 +195,7 @@ def predict(x, y, theta, sensors_data):
                 est, bad_data = predictor.predict(i, j, k, sensors_data)
                 if not bad_data:
                     predictions.append([i, j, k])
-                    errors.append(math.log(est))
+                    errors.append(est)
 
     if len(errors) > 0:
         ix = errors.index(min(errors))
@@ -233,27 +233,28 @@ if __name__ == '__main__':
         save_supervisor_coordinates()
 
         # calculate new velocity
-        left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
-        # left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
+        # left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
+        left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
+
         motorLeft.setVelocity(left_speed)
         motorRight.setVelocity(right_speed)
 
         # correction step each 100 steps
-        # if count % PRED_STEPS == 0:
-        #     pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
-        #     if pred != -1:
-        #         # save correction
-        #         x_pred.append(pred[0])
-        #         y_pred.append(pred[1])
-        #         theta_pred.append(pred[2])
-        #
-        #         # calculate correction
-        #         correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
-        #         correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
-        #         correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
+        if count % PRED_STEPS == 0:
+            pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
+            if pred != -1:
+                # save correction
+                x_pred.append(pred[0])
+                y_pred.append(pred[1])
+                theta_pred.append(pred[2])
+
+                # calculate correction
+                correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
+                correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
+                correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
-        window_communicator.sendCoordinates(x, y, x_odometry, y_odometry)
+        window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
 
         count += 1
 

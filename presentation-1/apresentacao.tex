@@ -1,0 +1,237 @@
+\documentclass{beamer}
+
+\mode<presentation>{
+\usetheme{Dresden}
+\setbeamercovered{transparent}
+\usecolortheme{lsc}
+}
+
+\mode<handout>{
+  % tema simples para ser impresso
+  \usepackage[bar]{beamerthemetree}
+  % Colocando um fundo cinza quando for gerar transparências para serem impressas
+  % mais de uma transparência por página
+  \beamertemplatesolidbackgroundcolor{black!5}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage[brazil]{varioref}
+\usepackage[english,brazil]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+
+\newcommand\Fontvi{\fontsize{6}{10}\selectfont}
+
+\beamertemplatetransparentcovereddynamic
+
+\title[Machine Learning for Probabilistic Robotics with Webots]{Machine Learning for Probabilistic Robotics with Webots}
+\author[Joan Gerard]{%
+  Joan Gerard\inst{1} \\
+  Promotor: Prof. Gianluca Bontempi \inst{1}}
+  \institute[ULB]{
+  \inst{1}%
+     Universit\'e Libre de Bruxelles}
+
+% Se comentar a linha abaixo, irá aparecer a data quando foi compilada a apresentação  
+\date{June 7, 2019}
+
+
+
+\AtBeginSection[]{
+  \begin{frame}<beamer>
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{Probabilistic Robotics}
+\pgfdeclareimage[height=6cm]{RM}{figs/whereAmI.png}
+\frame{
+    \frametitle{Where am I?}
+            \begin{itemize}
+                \item Robot knows where it is
+                \item Robot is kidnapped
+                \item Robot does not know where it is
+            \end{itemize}
+            \pgfuseimage{RM}
+
+}
+
+\pgfdeclareimage[height=6cm]{BAYES-FILTER-1}{figs/bayes-filter-1.png}%
+\pgfdeclareimage[height=6cm]{BAYES-FILTER-2}{figs/bayes-filter-2.png}%
+\frame{
+	\frametitle{Let's figure it out using Bayes Filter!}
+	\begin{columns}
+	    \column{5.5cm}
+	        \begin{itemize}
+	            \item Prediction
+	        \end{itemize}
+        	\pgfuseimage{BAYES-FILTER-2}
+        
+        \column{5.5cm}
+            \begin{itemize}
+	            \item Error Correction
+	        \end{itemize}
+        	\pgfuseimage{BAYES-FILTER-1}
+	\end{columns}
+}
+
+\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-1}{figs/particles-1.png}%
+\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-2}{figs/particles-2.png}%
+\pgfdeclareimage[height=4.0cm]{PARTICLE-FILTER-3}{figs/particles-3.png}%
+\frame{
+	\frametitle{What about Particles Filter?}
+	\centering
+
+    	\pgfuseimage{PARTICLE-FILTER-1}
+    	\pgfuseimage{PARTICLE-FILTER-2}\\
+    	\pgfuseimage{PARTICLE-FILTER-3}
+}
+
+\begin{frame}
+	\frametitle{Particles Filter Algorithm}
+
+	\begin{itemize}
+		\item Train/test a prediction model: robot state $\rightarrow$ distance sensor data
+		\item Compare it with the true sensor data and determine a weight for each particle
+		\item More close to the real sensor data more weight will have
+	\end{itemize}
+		\Fontvi
+		\begin{columns}
+			\column{9cm}
+			\begin{algorithm}[H]
+
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{particles, controlAction, sensorData}
+\Output{nextParticles}
+$nextParticles \leftarrow \emptyset$\\
+\BlankLine
+  \ForEach{particle $\in$ particles}{
+    particle.state $\leftarrow$ predictState(particle.state, controlAction) \\
+    particle.weight $\leftarrow$ calculateWeight(particle.state, sensorData)\\
+  }
+  \For{$m=1 \text{ to } m=|partices|$}{
+     $newParticle \leftarrow \text{draw } i \text{ from } particles \text{ with probability } \propto particles[i].weight$\\
+     nextParticles.add(newParticle)\\
+  }
+  \Return nextParticles
+\end{algorithm}
+
+		\end{columns}
+		
+\end{frame}
+
+\section{Webots}
+
+\pgfdeclareimage[height=3cm]{WEBOTS}{figs/webots.png}%
+\pgfdeclareimage[height=3cm]{ROBOT}{figs/robot.png}%
+\pgfdeclareimage[height=3cm]{WORLD}{figs/world.png}%
+\frame{
+	\begin{columns}
+    \frametitle{What tool can we use for simulating that problem?}
+        \column{4cm}
+            Webots!
+            \begin{itemize}
+            		\item Open Source
+	                \item Python, C++, Java, etc.
+	                \item 44 robot models
+	                \item Robot model creation/customization
+	                \item Robust documentation
+            \end{itemize}
+            
+            
+		\column{5cm}
+			\pgfuseimage{WEBOTS}\\
+			\pgfuseimage{ROBOT}
+			\pgfuseimage{WORLD}
+			
+    \end{columns}
+}
+
+\section{Project Objectives}
+\frame{
+	\frametitle{Main Objective}
+	\begin{itemize}
+	    \item The objective will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters (such as Particles Filter) for robot positioning estimation, independently from the kind of robot used for in-door environments.
+	\end{itemize}
+}
+
+\frame{
+    \frametitle{How do we plan to do it?}
+    \begin{itemize}
+        \item Using Webots
+        \begin{itemize}
+            \item Create a custom robot
+            \item Randomize control actions while moving avoiding obstacles
+	        \item Use a realistic in-door environment
+        \end{itemize}{}
+	    \item Using Machine Learning and Particles Filters
+	        \begin{itemize}
+                \item Positioning estimation
+    	        \item Error correction
+        \end{itemize}
+	    \item Test the developed technique with other robots
+	\end{itemize}
+}
+
+
+\section{Preliminary Results}
+\pgfdeclareimage[height=3.8cm]{RESULTS}{figs/position3.png}%
+\pgfdeclareimage[height=3.5cm]{RESULTS1}{figs/arena.png}%
+\frame{
+	\frametitle{What have we done so far?}
+	
+	\begin{itemize}
+	    \item Robot creation
+	    \item Dummy environment creation
+	    \item Collect distance sensor data + real position coordinates
+	    \item Bayes Filter algorithm implementation
+    	    \begin{itemize}
+    	        \item \textit{Position prediction}: Odometry techniques
+    	        \item \textit{Error correction}: Training a Random Forest model using collected data
+    	    \end{itemize}
+	\end{itemize}
+	
+	\pgfuseimage{RESULTS1}
+	\pgfuseimage{RESULTS}
+}
+
+\frame{
+
+    \frametitle{Are the results good?}
+    \begin{itemize}
+        \item Yes! but there are improvements to be done:
+        \begin{itemize}
+            \item Collect more data (+ Simulations)
+            \item Randomize robot moves 
+            \item Train/test with other Machine Learning models
+            \item Improve performance of the error correction algorithm
+        \end{itemize}
+    \end{itemize}
+}
+
+\pgfdeclareimage[height=6cm]{QUESTIONS}{figs/questions.png}%
+\frame{
+    \centering
+    \pgfuseimage{QUESTIONS}
+}
+
+
+\end{document}

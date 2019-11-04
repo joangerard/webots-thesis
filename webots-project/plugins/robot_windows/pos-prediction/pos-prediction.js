@@ -19,10 +19,18 @@ function loadChart(items) {
         y: items.y_odometry,
         name: 'Odometry'
     }
+    
+    let xy_pred = {
+        x: items.x_pred,
+        y: items.y_pred,
+        name: 'Prediction',
+        mode: 'markers'
+    }
 
     let data = [
         xy,
-        xy_odometry
+        xy_odometry,
+        xy_pred
     ]
 
     var layout = {

@@ -21,7 +21,7 @@ class Predictor:
 
         size = len(inputs)
 
-        train_size = int(.8*size)
+        train_size = int(.99*size)
 
         train_input = inputs[:train_size]
         train_output = output[:train_size]
@@ -64,4 +64,4 @@ class Predictor:
 
                 err += (elem - true_dist[ix]) ** 2
 
-        return math.exp(err), bad_data
+        return err, bad_data
