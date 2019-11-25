@@ -5,16 +5,13 @@ class DataCollector:
 
     def __init__(self):
         self.path = 'results/robot_info_dataset.csv'
-        self.read_path = 'results/robot_info_dataset-lolz.csv'
+        self.read_path = 'results/robot_info_dataset.csv'
 
-    def collect(self, estimated_x, estimated_y, estimated_theta, real_x, real_y, real_theta, distances):
+    def collect(self, real_x, real_y, real_theta, distances):
         data = {
             'x': real_x,
             'y': real_y,
             'theta': real_theta,
-            'estimated_x': estimated_x,
-            'estimated_y': estimated_y,
-            'estimated_theta': estimated_theta,
             'sensor_1': distances[:, 0],
             'sensor_2': distances[:, 1],
             'sensor_3': distances[:, 2],

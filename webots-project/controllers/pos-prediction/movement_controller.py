@@ -9,7 +9,7 @@ class MovementController:
 
     MAX_SPEED = 6
     THRESHOLD_PROXIMITY = 0.15
-    THRESHOLD_PROB_TURN = 0.01
+    THRESHOLD_PROB_TURN = 0.03
 
     SENSOR_ERROR = 0.1
 

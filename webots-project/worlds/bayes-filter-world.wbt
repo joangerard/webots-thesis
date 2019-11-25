@@ -258,7 +258,7 @@ DEF e-puck Robot {
     density -1
     mass 0.5
   }
-  controller "<extern>"
+  controller "pos-prediction"
   supervisor TRUE
   window "pos-prediction"
 }

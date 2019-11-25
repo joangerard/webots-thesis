@@ -28,7 +28,9 @@ ENCODER_UNIT = 159.23
 INIT_X = 0.0
 INIT_Y = 0.0
 INIT_ANGLE = 0
-PRED_STEPS = 20
+PRED_STEPS = 25
+CAPTURING_DATA = True
+MOVING_ROBOT_STEPS = 100
 correction_x = 0
 correction_y = 0
 correction_theta = 0
@@ -99,6 +101,7 @@ def step():
 def save_supervisor_coordinates():
     # true robot position information
     trans_info = robot_trans.getSFVec3f()
+    # print('SUP COORD:', trans_info)
     x_coordinate, y_coordinate = robot_to_xy(trans_info[2], trans_info[0])
     x.append(x_coordinate)
     y.append(y_coordinate)
@@ -170,8 +173,8 @@ def plot():
 def predict(x, y, theta, sensors_data):
     predictions = []
     errors = []
-    interval = 6
-    interval_angle = 6
+    interval = 4
+    interval_angle = 4
 
     xrange = [l/100 for l in range(max(0, int(x*100) - interval), min(MAX_X*100, int(x*100) + interval), 2)]
     yrange = [l/100 for l in range(max(0, int(y*100) - interval), min(int(MAX_Y*100), int(y*100) + interval), 2)]
@@ -203,6 +206,17 @@ def predict(x, y, theta, sensors_data):
 
     return -1
 
+
+def move_robot_to_random_position():
+    new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
+    new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
+    new_theta = -np.pi + np.random.random() * 2 * np.pi
+
+    print('New Values: ', new_x, new_y, new_theta)
+
+    robot_trans.setSFVec3f([new_y, 0.0001, new_x])
+
+
 if __name__ == '__main__':
     init()
     step()
@@ -218,9 +232,9 @@ if __name__ == '__main__':
         odometry_info = odometry.track_step(ENCODER_UNIT * (positionLeft.getValue()),
                                             ENCODER_UNIT * (positionRight.getValue()))
 
-        if not step():
-            # print('saving data')
-            data_collector.collect(x_odometry, y_odometry, theta_odometry, x, y, theta, np.array(distance_sensors_info))
+        if not step() and CAPTURING_DATA:
+            print('saving data')
+            data_collector.collect(x, y, theta, np.array(distance_sensors_info))
             plot()
 
         # print('Compass: ', get_bearing_degrees(), 'Odometry:', convert_angle_to_xy_coordinates(odometry_info.theta))
@@ -240,7 +254,7 @@ if __name__ == '__main__':
         motorRight.setVelocity(right_speed)
 
         # correction step each 100 steps
-        if count % PRED_STEPS == 0:
+        if not CAPTURING_DATA and count % PRED_STEPS == 0:
             pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
             if pred != -1:
                 # save correction
@@ -255,6 +269,10 @@ if __name__ == '__main__':
 
         # send data to html page
         window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
+
+        # move robot to a random position after a while
+        if count % MOVING_ROBOT_STEPS == 0:
+            move_robot_to_random_position()
 
         count += 1
 
