@@ -29,7 +29,7 @@ INIT_X = 0.0
 INIT_Y = 0.0
 INIT_ANGLE = 0
 PRED_STEPS = 25
-CAPTURING_DATA = True
+CAPTURING_DATA = False
 MOVING_ROBOT_STEPS = 100
 correction_x = 0
 correction_y = 0
@@ -208,13 +208,16 @@ def predict(x, y, theta, sensors_data):
 
 
 def move_robot_to_random_position():
-    new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
-    new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
-    new_theta = -np.pi + np.random.random() * 2 * np.pi
+    # new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
+    # new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
+    # old_z = robot_trans.getSFVec3f()[1]
 
-    print('New Values: ', new_x, new_y, new_theta)
+    # new_theta = -np.pi + np.random.random() * 2 * np.pi
 
-    robot_trans.setSFVec3f([new_y, 0.0001, new_x])
+    # print('New Values: ', new_x, new_y, old_z)
+    robot_sup = robot.getFromDef("e-puck")
+    robot_trans = robot_sup.getField("translation")
+    robot_trans.setSFVec3f([0, 0, 0])
 
 
 if __name__ == '__main__':
@@ -224,8 +227,6 @@ if __name__ == '__main__':
                         ENCODER_UNIT * (positionRight.getValue()), INIT_X, INIT_Y, INIT_ANGLE)
 
     count = 0
-
-
 
     while(True):
 
@@ -268,11 +269,12 @@ if __name__ == '__main__':
                 correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
-        window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
+        if not CAPTURING_DATA:
+            window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
 
         # move robot to a random position after a while
-        if count % MOVING_ROBOT_STEPS == 0:
-            move_robot_to_random_position()
+        # if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
+        #     move_robot_to_random_position()
 
         count += 1
 

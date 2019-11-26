@@ -18,3 +18,10 @@ webots-project/controllers/pos-prediction/thesis/bin/*
 webots-project/controllers/pos-prediction/thesis/lib/*
 webots-project/worlds/.*.wbproj
 webots-project/plugins/robot_windows/pos-prediction/node_modules/*
+*.nav
+*.out
+*.snm
+*.sty
+*.pyc
+*.eps
+*.csv

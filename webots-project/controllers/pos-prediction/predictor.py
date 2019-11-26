@@ -21,12 +21,12 @@ class Predictor:
 
         size = len(inputs)
 
-        train_size = int(.99*size)
+        train_size = int(.8*size)
 
         train_input = inputs[:train_size]
         train_output = output[:train_size]
 
-        print('train size: ', train_size)
+        print('train size: ', train_size, 'of', size)
 
         test_input = inputs[train_size:]
         test_output = output[train_size:]
