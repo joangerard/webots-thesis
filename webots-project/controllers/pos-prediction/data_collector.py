@@ -20,6 +20,8 @@ class DataCollector:
         real_y = real_y[1:]
         real_theta = real_theta[1:]
 
+        distances_time1 = distances[:len(distances) - 1]
+
         distances = distances[1:, :]
 
         data = {
@@ -36,7 +38,15 @@ class DataCollector:
             'sensor_5': distances[:, 4],
             'sensor_6': distances[:, 5],
             'sensor_7': distances[:, 6],
-            'sensor_8': distances[:, 7]
+            'sensor_8': distances[:, 7],
+            'dsensor_1': np.subtract(distances[:, 0], distances_time1[:, 0]),
+            'dsensor_2': np.subtract(distances[:, 1], distances_time1[:, 1]),
+            'dsensor_3': np.subtract(distances[:, 2], distances_time1[:, 2]),
+            'dsensor_4': np.subtract(distances[:, 3], distances_time1[:, 3]),
+            'dsensor_5': np.subtract(distances[:, 4], distances_time1[:, 4]),
+            'dsensor_6': np.subtract(distances[:, 5], distances_time1[:, 5]),
+            'dsensor_7': np.subtract(distances[:, 6], distances_time1[:, 6]),
+            'dsensor_8': np.subtract(distances[:, 7], distances_time1[:, 7])
         }
 
         df = pd.DataFrame(data)

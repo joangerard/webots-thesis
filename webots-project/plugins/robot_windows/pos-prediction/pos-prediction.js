@@ -35,14 +35,21 @@ function loadChart(items) {
 
     var layout = {
         title: 'Real Position vs Odometry',
-        width: 500,
-        height: 500,
+        width: 800,
+        height: 600,
+        margin: {
+            l: 30,
+            r: 30,
+            b: 30,
+            t: 30,
+            pad: 4
+          },
         xaxis: {
-            range: [0, 2],
+            range: [0, 9],
             autorange: false
         },
         yaxis: {
-            range: [0, 2],
+            range: [0, 7],
             autorange: false
         },
       };

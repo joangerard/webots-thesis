@@ -1,7 +1,6 @@
 import pandas as pd
 from data_collector import DataCollector
 from sklearn.ensemble import RandomForestRegressor
-import matplotlib.pyplot as plt
 import math
 
 

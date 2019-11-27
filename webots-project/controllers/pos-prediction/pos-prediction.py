@@ -6,6 +6,7 @@ from controller import Supervisor
 from odometry import Odometry
 from data_collector import DataCollector
 from movement_controller import MovementController
+from predictor_NN import PredictorNN
 from predictor import Predictor
 from window_communicator import WindowCommunicator
 import matplotlib.pyplot as plt
@@ -22,11 +23,11 @@ MAX_SPEED = 6
 TIME_STEP = 8
 WHEEL_RADIUS = 0.05
 SAMPLING_PERIOD = 10
-MAX_X = 2
-MAX_Y = 1.5
+MAX_X = 9
+MAX_Y = 7
 ENCODER_UNIT = 159.23
-INIT_X = 0.0
-INIT_Y = 0.0
+INIT_X = 5
+INIT_Y = 5
 INIT_ANGLE = 0
 PRED_STEPS = 25
 CAPTURING_DATA = False
@@ -47,8 +48,6 @@ motorRight = robot.getMotor("right wheel motor")
 positionLeft = robot.getPositionSensor("left wheel sensor")
 positionRight = robot.getPositionSensor("right wheel sensor")
 
-predictor = Predictor()
-
 timestep = int(robot.getBasicTimeStep())
 
 x = []
@@ -68,6 +67,8 @@ theta_pred = []
 data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
+predictor = PredictorNN(data_collector)
+# predictor = Predictor()
 
 def init():
     compass.enable(timestep)
@@ -79,10 +80,12 @@ def init():
     positionLeft.enable(timestep)
 
 def robot_to_xy(x, y):
-    return x+1, y+0.75
+    # return x+1, y+0.75
+    return x, y
 
 def xy_to_robot(x, y):
-    return x-1, y-0.75
+    # return x-1, y-0.75
+    return x, y
 
 def get_bearing_degrees():
     north = compass.getValues()
@@ -105,13 +108,14 @@ def save_supervisor_coordinates():
     x_coordinate, y_coordinate = robot_to_xy(trans_info[2], trans_info[0])
     x.append(x_coordinate)
     y.append(y_coordinate)
-    theta.append((get_bearing_degrees()))
+    angle = get_bearing_degrees()
+    theta.append(angle)
 
 
 def save_odometry_coordinates(coordinate):
     # convert robot coordinates into global coordinate system
-    x_odometry.append(1 + 2*INIT_X - coordinate.x + correction_x)
-    y_odometry.append(0.75 + 2*INIT_Y - coordinate.y + correction_y)
+    x_odometry.append(coordinate.x + correction_x)
+    y_odometry.append(coordinate.y + correction_y)
     theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta) + correction_theta)
 
 def save_sensor_distances(distanceSensors):
@@ -158,8 +162,8 @@ def convert_angle_to_xy_coordinates(angle):
 
 def plot():
     # Enter here exit cleanup code.
-    plt.ylim([0, 1.5])
-    plt.xlim([0, 2])
+    plt.ylim([0, MAX_Y])
+    plt.xlim([0, MAX_X])
     plt.xlabel("x")
     plt.ylabel("y")
     plt.plot(x, y, label="real")
