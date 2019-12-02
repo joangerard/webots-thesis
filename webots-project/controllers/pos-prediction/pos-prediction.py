@@ -8,6 +8,7 @@ from data_collector import DataCollector
 from movement_controller import MovementController
 from predictor_NN import PredictorNN
 from predictor import Predictor
+from predictor_online import PredictorOnline
 from window_communicator import WindowCommunicator
 from robot_configuration import RobotConfiguration
 from environment_configuration import EnvironmentConfiguration
@@ -26,7 +27,7 @@ MAX_SPEED = 6
 TIME_STEP = 8
 WHEEL_RADIUS = 0.05
 SAMPLING_PERIOD = 10
-MAX_X = 9
+MAX_X = 10
 MAX_Y = 7
 ENCODER_UNIT = 159.23
 INIT_X = 5
@@ -70,6 +71,7 @@ theta_pred = []
 data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
+# predictor = PredictorOnline(data_collector)
 # predictor = PredictorNN(data_collector)
 predictor = Predictor()
 
@@ -316,10 +318,14 @@ if __name__ == '__main__':
         #         correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
-        if not CAPTURING_DATA and are_there_sensor_measurements(distanceSensors) and count % 20 == 0:
+        if not CAPTURING_DATA and are_there_sensor_measurements(distanceSensors):
             robot_conf = RobotConfiguration(x[-1], y[-1], theta[-1])
             particles = particles_filter.get_particles(robot_conf, distanceSensors)
-            # window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
+            # predictor.update_models({
+            #     'x': x[-1],
+            #     'y': y[-1],
+            #     'z': theta[-1]
+            # }, [distanceSensors[0].getValue(), distanceSensors[2].getValue(), distanceSensors[4].getValue(), distanceSensors[6].getValue()])
         window_communicator.sendCoordinatesParticles(x, y, particles.tolist())
 
 

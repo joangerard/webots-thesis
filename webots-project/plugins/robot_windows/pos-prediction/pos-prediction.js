@@ -36,7 +36,7 @@ function loadChart(items) {
     ]
 
     var layout = {
-        title: 'Real Position vs Odometry',
+        title: 'Real Position vs Particles',
         width: 800,
         height: 600,
         margin: {
@@ -47,7 +47,7 @@ function loadChart(items) {
             pad: 4
           },
         xaxis: {
-            range: [0, 9],
+            range: [0, 10],
             autorange: false
         },
         yaxis: {
@@ -80,7 +80,7 @@ function loadChartParticles(items) {
     ]
 
     var layout = {
-        title: 'Real Position vs Odometry',
+        title: 'Real Position vs Particles',
         width: 800,
         height: 600,
         margin: {
@@ -91,7 +91,7 @@ function loadChartParticles(items) {
             pad: 4
           },
         xaxis: {
-            range: [0, 9],
+            range: [0, 10],
             autorange: false
         },
         yaxis: {

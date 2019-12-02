@@ -7,19 +7,21 @@ from weighted_population import WeightedPopulation
 
 class ParticlesFilter:
     def __init__(self, environment_config, robot_initial_config, predictor):
+        self.margin_replacement = 0.5
+        self.mu = 0
+        self.sigma = 0.08
+        self.sigma_theta = 20
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
         self.number_of_particles = 100
         self.predictor = predictor
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
-        x = np.random.uniform(0, environment_config.environment_dim_x, self.number_of_particles)
-        y = np.random.uniform(0, environment_config.environment_dim_y, self.number_of_particles)
-        theta = np.random.uniform(0, 360, self.number_of_particles)
+        x = np.random.normal(robot_initial_config.x, self.sigma, self.number_of_particles)
+        y = np.random.normal(robot_initial_config.y, self.sigma, self.number_of_particles)
+        # x = np.random.uniform(0, environment_config.environment_dim_x, self.number_of_particles)
+        # y = np.random.uniform(0, environment_config.environment_dim_y, self.number_of_particles)
+        theta = np.random.normal(robot_initial_config.theta, self.sigma_theta, self.number_of_particles)
         self.particles = np.array([x, y, theta, self.weights])
-        self.margin_replacement = 0.5
-        self.mu = 0
-        self.sigma = 0.2
-        self.sigma_theta = 30
 
     def get_particles(self, robot_configuration, sensor_measurements):
         # self.particles = self.sampling_from_best()
