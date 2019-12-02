@@ -2,6 +2,8 @@ import pandas as pd
 from data_collector import DataCollector
 from sklearn.ensemble import RandomForestRegressor
 import math
+import pickle
+import os.path
 
 
 class Predictor:
@@ -30,21 +32,15 @@ class Predictor:
         test_input = inputs[train_size:]
         test_output = output[train_size:]
 
-        reg = RandomForestRegressor(n_estimators=5)
-        reg.fit(train_input, train_output)
-        print('importance:', reg.feature_importances_)
-        print('score', reg.score(test_input, test_output))
-
-        self.model = reg
-
-        # plt.plot(test_input[['x']][:100], test_output[['sensor_1']][:100], 'bo', markersize=0.1)
-        # plt.plot(test_input[['x']][:100], [reg.predict([[row['x'],
-        #                                                  row['y'],
-        #                                                  row['theta']]])[0]
-        #                                    for index, row in test_input.iterrows()][:100], 'ro', markersize=0.5)
-        # plt.xlabel('x')
-        # plt.ylabel('sensor 1 data')
-        # plt.savefig('results/x_vs_sensor1.eps', format='eps', dpi=900)
+        filename = 'models/train_data_model_rf_5.pckl'
+        # if model exists load otherwise create it
+        if os.path.isfile(filename):
+            self.model = pickle.load(open(filename, 'rb'))
+        else:
+            reg = RandomForestRegressor(n_estimators=5, criterion='mse', verbose=False, n_jobs=1)
+            reg.fit(inputs, output)
+            pickle.dump(reg, open(filename, 'wb'))
+            self.model = reg
 
     def predict(self, x, y, theta, sensors):
         pre_sensors = self.model.predict([[x, y, theta]])
@@ -55,6 +51,25 @@ class Predictor:
 
         true_dist = [sensor.getValue() for sensor in sensors]
         # print(true_dist)
+        for ix, elem in enumerate(pre_sensors[0]):
+            if not math.isnan(true_dist[ix]):
+                bad_data = False
+                # print('err', elem)
+                # print('true', true_dist[ix])
+
+                err += (elem - true_dist[ix]) ** 2
+
+        return err, bad_data
+
+    def prediction_error(self, x, y, theta, sensors):
+        pre_sensors = self.model.predict([[x, y, theta]])
+
+        err = 0
+        n_sensors = len(sensors)
+        bad_data = True
+
+        true_dist = [sensor.getValue() for sensor in sensors]
+
         for ix, elem in enumerate(pre_sensors[0]):
             if not math.isnan(true_dist[ix]):
                 bad_data = False

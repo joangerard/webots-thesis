@@ -1,0 +1,103 @@
+import random
+import numpy as np
+import math
+from robot_configuration import RobotConfiguration
+from weighted_population import WeightedPopulation
+
+
+class ParticlesFilter:
+    def __init__(self, environment_config, robot_initial_config, predictor):
+        self.environment_config = environment_config
+        self.robot_previous_config = robot_initial_config
+        self.number_of_particles = 100
+        self.predictor = predictor
+        self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
+        x = np.random.uniform(0, environment_config.environment_dim_x, self.number_of_particles)
+        y = np.random.uniform(0, environment_config.environment_dim_y, self.number_of_particles)
+        theta = np.random.uniform(0, 360, self.number_of_particles)
+        self.particles = np.array([x, y, theta, self.weights])
+        self.margin_replacement = 0.5
+        self.mu = 0
+        self.sigma = 0.2
+        self.sigma_theta = 30
+
+    def get_particles(self, robot_configuration, sensor_measurements):
+        # self.particles = self.sampling_from_best()
+        delta_robot_config = self._calculate_delta_movement(self.robot_previous_config, robot_configuration)
+        self.robot_previous_config = robot_configuration
+        # move all the particles
+        self._apply_movement_to(self.particles, delta_robot_config)
+
+        # calculate weights
+        for particle in self.particles.transpose():
+            particle[3], bad_data = self.predictor.prediction_error(particle[0], particle[1], particle[2], sensor_measurements)
+
+        # if the particle is near the robot then the error prediction will be near 0
+        # then this particle need to have more chances to be selected so we need to invert this value to be higher
+        max_weight = np.max(self.particles[3])
+        min_weight = np.min(self.particles[3])
+        self.particles[3] = (max_weight + min_weight) - self.particles[3] + 1.e-300
+
+        # normalize weights
+        self.normalize_weights()
+
+        # resampling based on weights
+        indexes = np.random.choice(range(0, self.number_of_particles), self.number_of_particles, p=self.particles[3], replace=True)
+        self.particles = self.particles.transpose()[indexes].transpose()
+
+        return self.particles
+
+    def normalize_weights(self):
+        self.particles[3] = self.particles[3] / self.particles[3].min()
+        self.particles[3] = self.particles[3] / self.particles[3].sum()
+
+    def sampling_from_best(self):
+        number_new_particles = math.floor(self.number_of_particles/500)
+        particles = self.particles.transpose()
+        particles = sorted(particles, key=lambda particle: particle[3], reverse=True)
+
+        # replace 1/5 of population
+        best_x = particles[0][0]
+        best_y = particles[0][1]
+        best_weight = particles[0][3]
+
+        new_best_xs = np.random.uniform(best_x - self.margin_replacement,
+                                        best_x + self.margin_replacement,
+                                        number_new_particles)
+        new_best_ys = np.random.uniform(best_y - self.margin_replacement,
+                                        best_y + self.margin_replacement,
+                                        number_new_particles)
+        new_best_thetas = np.random.uniform(0,
+                                            360,
+                                            number_new_particles)
+
+        new_best_particles = np.array([new_best_xs, new_best_ys, new_best_thetas, [best_weight for i in range(0, number_new_particles)]])
+
+        final_particles = np.vstack((particles[:len(particles) - number_new_particles], new_best_particles.transpose()))
+
+        return final_particles.transpose()
+
+
+    def _weighted_sample(self, population, weights, k):
+        indexes = random.sample(WeightedPopulation(range(0, self.number_of_particles), weights), k)
+        return population[indexes]
+
+    def _calculate_delta_movement(self, previous_robot_config, actual_robot_config):
+        x = actual_robot_config.x - previous_robot_config.x
+        y = actual_robot_config.y - previous_robot_config.y
+        theta = actual_robot_config.theta - previous_robot_config.theta
+
+        return RobotConfiguration(x, y, theta)
+
+    def _apply_movement_to(self, particles, delta_robot_config):
+        std_x = np.random.normal(delta_robot_config.x, self.sigma, self.number_of_particles)
+        std_y = np.random.normal(delta_robot_config.y, self.sigma, self.number_of_particles)
+        std_theta = np.random.normal(delta_robot_config.theta, self.sigma_theta, self.number_of_particles)
+
+        particles[0] = particles[0] + std_x
+        particles[1] = particles[1] + std_y
+        particles[2] = particles[2] + std_theta
+
+        particles[0] = np.clip(particles[0], 0, self.environment_config.environment_dim_x)
+        particles[1] = np.clip(particles[1], 0, self.environment_config.environment_dim_y)
+        particles[2] = (360 + particles[2]) % 360

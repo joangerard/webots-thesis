@@ -1,5 +1,59 @@
 
 <div>
   <div id="plot"></div>
+   
+  <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="row justify-content-center">
+            <div class="col-sm-3">
+                <label class="switch">
+                    <input type="checkbox" onclick="modifyMovementRandomness()" checked>
+                    <span class="slider round"></span>
+                    
+                  </label>
+            </div>
+            <div class="col-sm-4">
+              <label>Random movement</label>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-sm">
+            <!-- joystick -->
+            <div id="joystick" style="width:20%">
+                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:rgb(16,16,16);stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:rgb(240,240,240);stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:rgb(240,240,240);stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:rgb(16,16,16);stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="grad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style="stop-color:rgb(168,168,168);stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:rgb(239,239,239);stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="50" fill="url(#grad1)" />
+                  <circle cx="50" cy="50" r="47" fill="url(#grad2)" stroke="black" stroke-width="1.5px" />
+                  <circle cx="50" cy="50" r="44" fill="url(#grad3)" />
+                  <circle cx="50" cy="50" r="20" fill="#cccccc" stroke="black" stroke-width="1px" onclick="alert('CENTER');" />
+                  <path d="M50,14 54,22 46,22Z" fill="rgba(0,0,0,0.8)" onclick="move('UP');" />
+                  <path d="M50,86 54,78 46,78Z" fill="rgba(0,0,0,0.8)" onclick="move('DOWN');" />
+                  <path d="M14,50 22,54 22,46Z" fill="rgba(0,0,0,0.8)" onclick="move('LEFT');" />
+                  <path d="M86,50 78,54 78,46Z" fill="rgba(0,0,0,0.8)" onclick="move('RIGHT');" />
+                </svg>
+              </div>
+        </div>
+      </div>
+    </div>
 </div>
 <script src="plotly-latest.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="css/pos-prediction.css">

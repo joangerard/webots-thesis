@@ -19,3 +19,20 @@ class WindowCommunicator:
                     'y_pred': y_pred
                 }
             }))
+
+    def sendCoordinatesParticles(self, x, y, particles):
+        self.robot.wwiSendText(json.dumps(
+            {
+                'items': {
+                    'x': x,
+                    'y': y,
+                    'particles_x': particles[0],
+                    'particles_y': particles[1]
+                }
+            }
+        ))
+
+    def receiveMessage(self):
+        text = self.robot.wwiReceiveText()
+
+        return text

@@ -6,8 +6,8 @@ WorldInfo {
   basicTimeStep 16
 }
 Viewpoint {
-  orientation -0.5473783090237402 -0.6892963752829435 -0.47460245872952067 1.89947478580783
-  position 0.22540250684213975 12.328018881155716 4.5666533170633175
+  orientation -0.616211370889737 -0.6146537921392969 -0.49242691051055776 1.9281014527263822
+  position 1.3868701991099819 13.891640083055721 5.346870484523665
   exposure 0.5
 }
 Background {
@@ -439,56 +439,6 @@ Can {
   translation 2.8744 0.611066 7.20688
   rotation 0 1 0 1.32183
   name "can 4"
-}
-Cabinet {
-  translation 6.4326 0 3.46807
-  rotation 0 1 0 4.71239
-  name "cabinet 4"
-  depth 0.4
-  outerThickness 0.02
-  rowsHeights [
-    0.52, 0.44, 0.44, 0.44, 0.44
-  ]
-  columnsWidths [
-    0.96
-  ]
-  layout [
-    "Shelf  (1, 2, 1, 0)"
-    "Shelf  (1, 3, 1, 0)"
-    "Shelf  (1, 4, 1, 0)"
-    "Shelf  (1, 5, 1, 0)"
-  ]
-  primaryAppearance PaintedWood {
-    colorOverride 0.13333333333333333 0.13333333333333333 0.13333333333333333
-  }
-  secondaryAppearance PaintedWood {
-    colorOverride 0.13333333333333333 0.13333333333333333 0.13333333333333333
-  }
-}
-Book {
-  translation 6.15092 1.52924 3.02231
-  rotation -1 0 0 0.248684
-  name "book 2"
-}
-Book {
-  translation 6.15759 1.529 3.04469
-  rotation -1 0 0 0.265428
-  name "book 3"
-}
-Book {
-  translation 6.16417 1.52878 3.06681
-  rotation -1 0 0 0.27868
-  name "book 4"
-}
-Book {
-  translation 6.15821 1.52813 3.0912
-  rotation -1 0 0 0.311718
-  name "book 5"
-}
-Book {
-  translation 6.16234 1.52779 3.11388
-  rotation -1 0 0 0.326714
-  name "book 6"
 }
 PottedTree {
   translation 6.08049 0 4.51701

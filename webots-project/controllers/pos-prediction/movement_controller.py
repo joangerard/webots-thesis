@@ -38,6 +38,30 @@ class MovementController:
 
         return left_speed, right_speed
 
+    def move_straight(self):
+        left_speed = .5 * self.MAX_SPEED
+        right_speed = .5 * self.MAX_SPEED
+
+        return left_speed, right_speed
+
+    def move_left(self):
+        left_speed = -.5 * self.MAX_SPEED
+        right_speed = .5 * self.MAX_SPEED
+
+        return left_speed, right_speed
+
+    def move_right(self):
+        left_speed = .5 * self.MAX_SPEED
+        right_speed = -.5 * self.MAX_SPEED
+
+        return left_speed, right_speed
+
+    def move_backwards(self):
+        left_speed = -.5 * self.MAX_SPEED
+        right_speed = -.5 * self.MAX_SPEED
+
+        return left_speed, right_speed
+
     def calculate_velocity_random_move(self, distance_sensors):
 
         left_speed = .5 * self.MAX_SPEED

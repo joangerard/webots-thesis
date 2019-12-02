@@ -9,6 +9,9 @@ from movement_controller import MovementController
 from predictor_NN import PredictorNN
 from predictor import Predictor
 from window_communicator import WindowCommunicator
+from robot_configuration import RobotConfiguration
+from environment_configuration import EnvironmentConfiguration
+from particles_filter import ParticlesFilter
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -67,8 +70,14 @@ theta_pred = []
 data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
-predictor = PredictorNN(data_collector)
-# predictor = Predictor()
+# predictor = PredictorNN(data_collector)
+predictor = Predictor()
+
+robot_initial_conf = RobotConfiguration(INIT_X, INIT_Y, INIT_ANGLE)
+environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
+particles_filter = ParticlesFilter(environment_conf, robot_initial_conf, predictor)
+movement_random = True
+
 
 def init():
     compass.enable(timestep)
@@ -139,6 +148,16 @@ def get_sensor_distance():
         sensor.enable(timestep)
         distanceSensors.append(sensor)
     return distanceSensors
+
+
+def are_there_sensor_measurements(distanceSensors):
+    there_are = True
+    for sensor in distanceSensors:
+        if math.isnan(sensor.getValue()):
+            there_are = False
+
+    return there_are
+
 
 def calculate_velocity_random(distanceSensors):
     """
@@ -231,8 +250,16 @@ if __name__ == '__main__':
                         ENCODER_UNIT * (positionRight.getValue()), INIT_X, INIT_Y, INIT_ANGLE)
 
     count = 0
+    particles = np.array([[], []])
+    last_move = 'none'
 
     while(True):
+        # receive message
+        message = window_communicator.receiveMessage()
+        if message == 'start_randomness':
+            movement_random = True
+        elif message == 'stop_randomness':
+            movement_random = False
 
         odometry_info = odometry.track_step(ENCODER_UNIT * (positionLeft.getValue()),
                                             ENCODER_UNIT * (positionRight.getValue()))
@@ -251,30 +278,50 @@ if __name__ == '__main__':
         save_odometry_coordinates(odometry_info)
         save_supervisor_coordinates()
 
+
         # calculate new velocity
         # left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
-        left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
+        left_speed, right_speed = 0, 0
+        if movement_random:
+            left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
+            last_move = 'none'
+        else:
+            if last_move == 'none' or (message and last_move != message):
+                last_move = message
+            if last_move == 'UP':
+                left_speed, right_speed = movement_controller.move_straight()
+            elif last_move == 'DOWN':
+                left_speed, right_speed = movement_controller.move_backwards()
+            elif last_move == 'RIGHT':
+                left_speed, right_speed = movement_controller.move_right()
+            elif last_move == 'LEFT':
+                left_speed, right_speed = movement_controller.move_left()
 
         motorLeft.setVelocity(left_speed)
         motorRight.setVelocity(right_speed)
 
-        # correction step each 100 steps
-        if not CAPTURING_DATA and count % PRED_STEPS == 0:
-            pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
-            if pred != -1:
-                # save correction
-                x_pred.append(pred[0])
-                y_pred.append(pred[1])
-                theta_pred.append(pred[2])
 
-                # calculate correction
-                correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
-                correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
-                correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
+        # correction step each 100 steps
+        # if not CAPTURING_DATA and count % PRED_STEPS == 0:
+        #     pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
+        #     if pred != -1:
+        #         # save correction
+        #         x_pred.append(pred[0])
+        #         y_pred.append(pred[1])
+        #         theta_pred.append(pred[2])
+        #
+        #         # calculate correction
+        #         correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
+        #         correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
+        #         correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
-        if not CAPTURING_DATA:
-            window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
+        if not CAPTURING_DATA and are_there_sensor_measurements(distanceSensors) and count % 20 == 0:
+            robot_conf = RobotConfiguration(x[-1], y[-1], theta[-1])
+            particles = particles_filter.get_particles(robot_conf, distanceSensors)
+            # window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
+        window_communicator.sendCoordinatesParticles(x, y, particles.tolist())
+
 
         # move robot to a random position after a while
         # if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:

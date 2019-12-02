@@ -3,6 +3,8 @@ from keras import layers
 import numpy as np
 import math
 import pickle
+import os.path
+from keras.models import load_model
 
 
 class PredictorNN:
@@ -36,8 +38,13 @@ class PredictorNN:
         # normalize data
         self.normalize_data(train_data, test_data)
 
-        # kfold
-        self.create_model(train_data, train_targets, test_data, test_targets)
+        # if model exists load otherwise create it
+        if os.path.isfile('train_data_model_NN.h5'):
+            self.model = load_model('train_data_model_NN.h5')
+
+        else:
+            # kfold
+            self.model = self.create_model(train_data, train_targets, test_data, test_targets)
 
     def create_model(self, train_data, train_targets, test_data, test_targets):
         k = 4
@@ -49,7 +56,12 @@ class PredictorNN:
         model = self.build_model(train_data)
         history = model.fit(train_data, train_targets, epochs=num_epochs, batch_size=1)
         model.save('train_data_model_NN.h5')
-        mae_history = history.history['val_mean_absolute_error']
+
+        f = open('history.pckl', 'wb')
+        pickle.dump(history, f)
+        f.close()
+
+        mae_history = history.history['mean_absolute_error']
         val_mse, val_mae = model.evaluate(test_data, test_targets)
         all_scores.append(val_mae)
         all_mae_histories.append(mae_history)
@@ -64,6 +76,8 @@ class PredictorNN:
         f = open('all_mae_histories.pckl', 'wb')
         pickle.dump(all_mae_histories, f)
         f.close()
+
+        return model
 
     def normalize_data(self, train_data, test_data):
         mean = train_data.mean(axis=0)
@@ -83,8 +97,9 @@ class PredictorNN:
 
         return model
 
-    def predict(self, x, y, theta, sensors):
-        pre_sensors = self.model.predict([[x, y, theta]])
+    def prediction_error(self, x, y, theta, sensors):
+        features = np.array([[x, y, theta]])
+        pre_sensors = self.model.predict(features)
 
         err = 0
         n_sensors = len(sensors)
