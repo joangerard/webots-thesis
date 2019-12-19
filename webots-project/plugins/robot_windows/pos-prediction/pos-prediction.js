@@ -47,11 +47,11 @@ function loadChart(items) {
             pad: 4
           },
         xaxis: {
-            range: [0, 10],
+            range: [0, 3],
             autorange: false
         },
         yaxis: {
-            range: [0, 7],
+            range: [0, 2],
             autorange: false
         },
       };
@@ -124,9 +124,9 @@ window.onload = function() {
   window.robotWindow = webots.window();
   window.robotWindow.receive = function(value, robot) {
         let data = JSON.parse(value);
-        loadChartParticles(data.items)
+        loadChart(data.items)
   }
-  loadChartParticles([]);
+  loadChart([]);
   document.getElementById('joystick').hidden = true;
 }
 

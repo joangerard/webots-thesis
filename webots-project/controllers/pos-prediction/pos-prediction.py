@@ -27,14 +27,14 @@ MAX_SPEED = 6
 TIME_STEP = 8
 WHEEL_RADIUS = 0.05
 SAMPLING_PERIOD = 10
-MAX_X = 10
-MAX_Y = 7
+MAX_X = 2
+MAX_Y = 1.5
 ENCODER_UNIT = 159.23
-INIT_X = 5
-INIT_Y = 5
+INIT_X = 1
+INIT_Y = 0.75
 INIT_ANGLE = 0
 PRED_STEPS = 25
-CAPTURING_DATA = False
+CAPTURING_DATA = True
 MOVING_ROBOT_STEPS = 100
 correction_x = 0
 correction_y = 0
@@ -91,12 +91,12 @@ def init():
     positionLeft.enable(timestep)
 
 def robot_to_xy(x, y):
-    # return x+1, y+0.75
-    return x, y
+    return x+1, y+0.75
+    # return x, y
 
 def xy_to_robot(x, y):
-    # return x-1, y-0.75
-    return x, y
+    return x-1, y-0.75
+    # return x, y
 
 def get_bearing_degrees():
     north = compass.getValues()
@@ -188,8 +188,6 @@ def plot():
     plt.xlabel("x")
     plt.ylabel("y")
     plt.plot(x, y, label="real")
-    plt.plot(x_odometry, y_odometry, label="odometry")
-    plt.plot(x_pred, y_pred, 's', label="correction", marker='o')
     plt.title("Robot position estimation")
     plt.legend()
     plt.savefig("results/position.eps", format='eps')
@@ -304,18 +302,18 @@ if __name__ == '__main__':
 
 
         # correction step each 100 steps
-        # if not CAPTURING_DATA and count % PRED_STEPS == 0:
-        #     pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
-        #     if pred != -1:
-        #         # save correction
-        #         x_pred.append(pred[0])
-        #         y_pred.append(pred[1])
-        #         theta_pred.append(pred[2])
-        #
-        #         # calculate correction
-        #         correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
-        #         correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
-        #         correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
+        if not CAPTURING_DATA and count % PRED_STEPS == 0:
+            pred = predict(x_odometry[-1], y_odometry[-1], theta_odometry[-1], distanceSensors)
+            if pred != -1:
+                # save correction
+                x_pred.append(pred[0])
+                y_pred.append(pred[1])
+                theta_pred.append(pred[2])
+
+                # calculate correction
+                correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
+                correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
+                correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
         if not CAPTURING_DATA and are_there_sensor_measurements(distanceSensors):
@@ -326,8 +324,10 @@ if __name__ == '__main__':
             #     'y': y[-1],
             #     'z': theta[-1]
             # }, [distanceSensors[0].getValue(), distanceSensors[2].getValue(), distanceSensors[4].getValue(), distanceSensors[6].getValue()])
-        window_communicator.sendCoordinatesParticles(x, y, particles.tolist())
 
+            # window_communicator.sendCoordinatesParticles(x, y, particles.tolist())
+
+        # window_communicator.sendCoordinates(x, y, x_odometry, y_odometry, x_pred, y_pred)
 
         # move robot to a random position after a while
         # if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
