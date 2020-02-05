@@ -91,11 +91,11 @@ function loadChartParticles(items) {
             pad: 4
           },
         xaxis: {
-            range: [0, 10],
+            range: [0, 3],
             autorange: false
         },
         yaxis: {
-            range: [0, 7],
+            range: [0, 3],
             autorange: false
         },
       };

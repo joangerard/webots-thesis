@@ -73,7 +73,7 @@ movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
 # predictor = PredictorNN(data_collector)
-predictor = Predictor()
+predictor = PredictorNN(data_collector)
 
 robot_initial_conf = RobotConfiguration(INIT_X, INIT_Y, INIT_ANGLE)
 environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
