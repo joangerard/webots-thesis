@@ -274,9 +274,11 @@ if __name__ == '__main__':
         distanceSensors = get_sensor_distance()
 
         # collect data
-        save_sensor_distances(distanceSensors)
-        save_odometry_coordinates(odometry_info)
-        save_supervisor_coordinates()
+        if count % 30 == 0:
+            save_sensor_distances(distanceSensors)
+            save_odometry_coordinates(odometry_info)
+            save_supervisor_coordinates()
+            count = 0
 
 
         # calculate new velocity
