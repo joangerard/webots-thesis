@@ -12,38 +12,38 @@ class PredictorNN:
         self.percentageTraining = .8
 
         self.dc = data_collector
-        data = self.dc.get_data_frame()
 
-        # delete NA examples
-        data = data.dropna()
-
-        # shuffle data
-        data = data.sample(frac=1).reset_index(drop=True)
-
-        inputs = data[['x', 'y', 'theta']]
-        output = data[['sensor_1', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_5', 'sensor_6', 'sensor_7', 'sensor_8']]
-
-        size = len(inputs)
-
-        train_size = int(self.percentageTraining * size)
-
-        train_data = inputs[:train_size]
-        train_targets = output[:train_size]
-
-        test_data = inputs[train_size:]
-        test_targets = output[train_size:]
-
-        print('train size: ', train_size, 'of', size)
-
-        # normalize data
-        self.normalize_data(train_data, test_data)
-
-        # if model exists load otherwise create it
+        # if model exists load it otherwise create it
         if os.path.isfile('train_data_model_NN.h5'):
             self.model = load_model('train_data_model_NN.h5')
 
         else:
-            # kfold
+            data = self.dc.get_data_frame()
+
+            # delete NA examples
+            data = data.dropna()
+
+            # shuffle data
+            data = data.sample(frac=1).reset_index(drop=True)
+
+            inputs = data[['x', 'y', 'theta']]
+            output = data[['sensor_1', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_5', 'sensor_6', 'sensor_7', 'sensor_8']]
+
+            size = len(inputs)
+
+            train_size = int(self.percentageTraining * size)
+
+            train_data = inputs[:train_size]
+            train_targets = output[:train_size]
+
+            test_data = inputs[train_size:]
+            test_targets = output[train_size:]
+
+            print('train size: ', train_size, 'of', size)
+
+            # normalize data
+            self.normalize_data(train_data, test_data)
+
             self.model = self.create_model(train_data, train_targets, test_data, test_targets)
 
     def create_model(self, train_data, train_targets, test_data, test_targets):

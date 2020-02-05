@@ -73,10 +73,18 @@ function loadChartParticles(items) {
         name: 'Particles',
         mode: 'markers'
     }
+    
+     let xy_odometry = {
+        x: items.x_odometry,
+        y: items.y_odometry,
+        name: 'Odometry',
+        mode: 'markers'
+    }
 
     let data = [
         xy,
-        xy_pred
+        xy_pred,
+        xy_odometry
     ]
 
     var layout = {

@@ -9,8 +9,8 @@ class ParticlesFilter:
     def __init__(self, environment_config, robot_initial_config, predictor):
         self.margin_replacement = 0.5
         self.mu = 0
-        self.sigma = 0.08
-        self.sigma_theta = 20
+        self.sigma = 0.004
+        self.sigma_theta = 2.5
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
         self.number_of_particles = 100
