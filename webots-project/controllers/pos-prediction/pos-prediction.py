@@ -72,8 +72,8 @@ data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
-# predictor = PredictorNN(data_collector)
 predictor = PredictorNN(data_collector)
+# predictor = Predictor()
 
 robot_initial_conf = RobotConfiguration(INIT_X, INIT_Y, INIT_ANGLE)
 environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
@@ -306,14 +306,13 @@ if __name__ == '__main__':
             robot_conf = RobotConfiguration(x_odometry[-1], y_odometry[-1], theta_odometry[-1])
             particles = particles_filter.get_particles(robot_conf, distanceSensors)
 
-        print(theta_odometry[-1], theta[-1])
         # correction step each PRED_STEPS steps
         if not CAPTURING_DATA and count % PRED_STEPS == 0 and count != 0:
             # select the particle whose weight is greater than the rest.
             bestParticleWeight = np.max(particles[3])
             bestParticleIndex, = np.where(np.isclose(particles[3], bestParticleWeight))
 
-            if bestParticleIndex.size == 1:
+            if bestParticleIndex.size > 0:
                 bestParticleIndex = bestParticleIndex[0]
                 # save correction
                 x_pred.append(particles[0][bestParticleIndex])

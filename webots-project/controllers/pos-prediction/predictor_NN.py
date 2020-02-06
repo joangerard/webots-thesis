@@ -12,39 +12,22 @@ class PredictorNN:
         self.percentageTraining = .8
 
         self.dc = data_collector
+        data = self.dc.get_data_frame()
+
+        # delete NA examples
+        data = data.dropna()
 
         # if model exists load it otherwise create it
         if os.path.isfile('train_data_model_NN.h5'):
+            self.inputs = data[['x', 'y', 'theta']]
+            self.output = data[['sensor_1', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_5', 'sensor_6', 'sensor_7', 'sensor_8']]
+
             self.model = load_model('train_data_model_NN.h5')
 
-        else:
-            data = self.dc.get_data_frame()
-
-            # delete NA examples
-            data = data.dropna()
-
-            # shuffle data
-            data = data.sample(frac=1).reset_index(drop=True)
-
-            inputs = data[['x', 'y', 'theta']]
-            output = data[['sensor_1', 'sensor_2', 'sensor_3', 'sensor_4', 'sensor_5', 'sensor_6', 'sensor_7', 'sensor_8']]
-
-            size = len(inputs)
-
-            train_size = int(self.percentageTraining * size)
-
-            train_data = inputs[:train_size]
-            train_targets = output[:train_size]
-
-            test_data = inputs[train_size:]
-            test_targets = output[train_size:]
-
-            print('train size: ', train_size, 'of', size)
-
-            # normalize data
-            self.normalize_data(train_data, test_data)
-
-            self.model = self.create_model(train_data, train_targets, test_data, test_targets)
+            self.inputs_max = self.inputs.max()
+            self.inputs_min = self.inputs.min()
+            self.output_max = self.output.max()
+            self.output_min = self.output.min()
 
     def create_model(self, train_data, train_targets, test_data, test_targets):
         k = 4
@@ -97,22 +80,27 @@ class PredictorNN:
 
         return model
 
+    def normalize_inputs(self, inputs):
+        return (inputs - self.inputs_min)/(self.inputs_max - self.inputs_min)
+
+    def denormalize_output(self, outputs):
+        return outputs*(self.output_max - self.output_min)+self.output_min
+
     def prediction_error(self, x, y, theta, sensors):
-        features = np.array([[x, y, theta]])
-        pre_sensors = self.model.predict(features)
+        features = self.normalize_inputs(np.array([x, y, theta]))
+        pre_sensors = self.denormalize_output(self.model.predict(np.array([features]))[0])
 
         err = 0
         n_sensors = len(sensors)
         bad_data = True
 
-        true_dist = [sensor.getValue() for sensor in sensors]
         # print(true_dist)
-        for ix, elem in enumerate(pre_sensors[0]):
-            if not math.isnan(true_dist[ix]):
+        for ix, elem in enumerate(pre_sensors):
+            if not math.isnan(sensors[ix]):
                 bad_data = False
                 # print('err', elem)
                 # print('true', true_dist[ix])
 
-                err += (elem - true_dist[ix]) ** 2
+                err += (elem - sensors[ix]) ** 2
 
         return err, bad_data

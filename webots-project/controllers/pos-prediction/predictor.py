@@ -68,14 +68,12 @@ class Predictor:
         n_sensors = len(sensors)
         bad_data = True
 
-        true_dist = [sensor.getValue() for sensor in sensors]
-
         for ix, elem in enumerate(pre_sensors[0]):
-            if not math.isnan(true_dist[ix]):
+            if not math.isnan(sensors[ix]):
                 bad_data = False
                 # print('err', elem)
                 # print('true', true_dist[ix])
 
-                err += (elem - true_dist[ix]) ** 2
+                err += (elem - sensors[ix]) ** 2
 
         return err, bad_data
