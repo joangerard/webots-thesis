@@ -33,7 +33,7 @@ ENCODER_UNIT = 159.23
 INIT_X = 1
 INIT_Y = 0.75
 INIT_ANGLE = np.pi
-PRED_STEPS = 25
+PRED_STEPS = 1
 CAPTURING_DATA = False
 MOVING_ROBOT_STEPS = 100
 correction_x = 0
@@ -320,9 +320,9 @@ if __name__ == '__main__':
                 theta_pred.append(particles[2][bestParticleIndex])
 
                 # calculate correction
-                correction_x = correction_x + (x_pred[-1] - x_odometry[-1])
-                correction_y = correction_y + (y_pred[-1] - y_odometry[-1])
-                correction_theta = correction_theta + (theta_pred[-1] - theta_odometry[-1])
+                correction_x += (x_pred[-1] - x_odometry[-1])
+                correction_y += (y_pred[-1] - y_odometry[-1])
+                correction_theta += (theta_pred[-1] - theta_odometry[-1])
 
         # send data to html page
         window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())

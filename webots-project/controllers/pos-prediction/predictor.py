@@ -76,4 +76,4 @@ class Predictor:
 
                 err += (elem - sensors[ix]) ** 2
 
-        return err, bad_data
+        return 1/err, bad_data

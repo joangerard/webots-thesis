@@ -25,6 +25,7 @@
 \usepackage{colortbl}
 \usepackage[ruled, linesnumbered]{algorithm2e}
 \usepackage{amsmath}
+\usepackage{hyperref}
 
 \newcommand\Fontvi{\fontsize{6}{10}\selectfont}
 
@@ -39,7 +40,7 @@
      Universit\'e Libre de Bruxelles}
 
 % Se comentar a linha abaixo, irá aparecer a data quando foi compilada a apresentação  
-\date{June 7, 2019}
+\date{February 6, 2020}
 
 
 
@@ -61,177 +62,160 @@
 \tableofcontents
 \end{frame}
 
-\section{Probabilistic Robotics}
-\pgfdeclareimage[height=6cm]{RM}{figs/whereAmI.png}
+\section{Training Neural Network}
 \frame{
-    \frametitle{Where am I?}
-            \begin{itemize}
-                \item Robot knows where it is
-                \item Robot is kidnapped
-                \item Robot does not know where it is
-            \end{itemize}
-            \pgfuseimage{RM}
-
-}
-
-\pgfdeclareimage[height=6cm]{BAYES-FILTER-1}{figs/bayes-filter-1.png}%
-\pgfdeclareimage[height=6cm]{BAYES-FILTER-2}{figs/bayes-filter-2.png}%
-\frame{
-	\frametitle{Let's figure it out using Bayes Filter!}
-	\begin{columns}
-	    \column{5.5cm}
-	        \begin{itemize}
-	            \item Prediction
-	        \end{itemize}
-        	\pgfuseimage{BAYES-FILTER-2}
-        
-        \column{5.5cm}
-            \begin{itemize}
-	            \item Error Correction
-	        \end{itemize}
-        	\pgfuseimage{BAYES-FILTER-1}
-	\end{columns}
-}
-
-\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-1}{figs/particles-1.png}%
-\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-2}{figs/particles-2.png}%
-\pgfdeclareimage[height=4.0cm]{PARTICLE-FILTER-3}{figs/particles-3.png}%
-\frame{
-	\frametitle{What about Particles Filter?}
-	\centering
-
-    	\pgfuseimage{PARTICLE-FILTER-1}
-    	\pgfuseimage{PARTICLE-FILTER-2}\\
-    	\pgfuseimage{PARTICLE-FILTER-3}
-}
-
-\begin{frame}
-	\frametitle{Particles Filter Algorithm}
-
+	\frametitle{What is new?}
 	\begin{itemize}
-		\item Train/test a prediction model: robot state $\rightarrow$ distance sensor data
-		\item Compare it with the true sensor data and determine a weight for each particle
-		\item More close to the real sensor data more weight will have
+		\item Capture the real position of the robot + sensors measurements each 25 steps only
+		\item In 10 minutes simulation (fast mode) 65342 samples captured
+		\item All sensors has a lookup table with $\sigma = 0.2$ ($\pm2$ cm)
 	\end{itemize}
-		\Fontvi
-		\begin{columns}
-			\column{9cm}
-			\begin{algorithm}[H]
+}
+
+\frame{
+	\frametitle{Preparing Data}
+	\begin{itemize}
+		\item Normalize data
+		\item Delete NA rows
+		\item Shuffle data
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=3cm]{MAE}{figs/mae.png}
+\pgfdeclareimage[height=3cm]{LOSS}{figs/loss.png}
+\frame{
+	\frametitle{Neural Network Configuration}
+	\begin{itemize}
+		\item One hidden layer with "relu" as optimizer
+		\item 150 ephochs
+		\item 5-fold 
+		\item 10 hidden neurons
+		\item Loss: MSE
+		\item Metric: MAE
+	\end{itemize}
+	\pgfuseimage{MAE}
+	\pgfuseimage{LOSS}
+}
+
+\pgfdeclareimage[height=3cm]{MAENN}{figs/nn.png}
+\pgfdeclareimage[height=3cm]{NMSENN}{figs/nmse.png}
+\frame{
+	\frametitle{Tuning hidden neurons}
+	\begin{itemize}
+		\item 3-fold
+		\item 75 epochs
+		\item Number of Neurons: 2, 5, 8, 12, 16
+	\end{itemize}
+	\pgfuseimage{MAENN}
+	\pgfuseimage{NMSENN}
+}
+
+\frame{
+	\frametitle{Final model}
+	\begin{itemize}
+		\item NN trained with 75 epochs
+		\item 12 neurons in hidden layer
+	\end{itemize}
+}
+
+\section{Particles Filter}
+
+\frame{
+	\frametitle{Configuration}
+	\begin{itemize}
+		\item 50 particles used
+		\item The initial position of all the particles are
+		determined by the initial position of the robot.
+	\end{itemize}
+}
+
+
+\frame{
+	\frametitle{Pseudo code algorithm}
+	\begin{small}
+	\begin{algorithm}[H]
 
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-\Input{particles, controlAction, sensorData}
-\Output{nextParticles}
-$nextParticles \leftarrow \emptyset$\\
+\Input{robotState (odometry data), sensorsData}
+\Output{particles}
 \BlankLine
+  deltaMove $\leftarrow$ robotState - previousRobotState\\
+  particles.state = particles.state + deltaMove\\
+  addRandomMove(particles.state)\\
   \ForEach{particle $\in$ particles}{
-    particle.state $\leftarrow$ predictState(particle.state, controlAction) \\
-    particle.weight $\leftarrow$ calculateWeight(particle.state, sensorData)\\
+   	particle.weight $\leftarrow$ predictError(particle.state, sensorsData)\\
   }
-  \For{$m=1 \text{ to } m=|partices|$}{
-     $newParticle \leftarrow \text{draw } i \text{ from } particles \text{ with probability } \propto particles[i].weight$\\
-     nextParticles.add(newParticle)\\
-  }
-  \Return nextParticles
+  
+  invertParticlesWeight(particles)\\
+  normalizeWeights(particles)\\
+  particles = resamplingBasedOnWeights(prob=particles.weight, replace=True)\\
+  previousRobotState $\leftarrow$ robotState \\
+  \Return particles
+  
 \end{algorithm}
+\end{small}
+}
 
-		\end{columns}
+\pgfdeclareimage[height=3cm]{PP1}{figs/pp_1.png}
+\pgfdeclareimage[height=3cm]{PP2}{figs/pp_2.png}
+\frame{
+	\frametitle{Add Random Move}
+	\begin{itemize}
+		\item Given the state of each particle $(x, y, \theta)$ it adds a random value
+		following a normal distribution.
+		\item For $(x, y)$: $\mathcal{N}(0, 0.008)$
+		\item For $\theta: \mathcal{N}(0, 0.015)$
+		\item Tested with other values as well. Left image corresponds to $\mathcal{N}(0, 0.08)$ for $(x, y)$ and $\mathcal{N}(0, 1.5)$ for $\theta$. 
+		Right image corresponds to the values mentioned above.
+	\end{itemize}
+	\begin{center}
+	\pgfuseimage{PP1}
+	\pgfuseimage{PP2}
+	\end{center}
+}
+
+\frame{
+	\frametitle{Predict Error}
+	\begin{itemize}
+		\item Let $y_i$ be the $i$th sensor measurement
+		\item Let $\hat{y_i}$ be the prediction of the $i$th sensor measurement
+		\item Normalize the inputs: $(x, y, \theta)$ using \href{https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range}{this}  as a reference
+		\item Make a prediction using the neural network and the normalized inputs
+		\item Denormalize the outputs
+		\item Calculate error: $\sum_{i=1}^{i=8}(\hat{y_i} - y_i)^2$
+	\end{itemize}
+}
+
+\frame{
+	\frametitle{Invert Particles Weight}
+	\begin{itemize}
+		\item The prediction error algorithm will return a low value when the predicted sensor measurements will be close
+		to the true sensor measurements. Thus the closer the particle to the real state, the lower its weight. We want exactly the opposite.
+		\item To invert this we can apply:
 		
-\end{frame}
-
-\section{Webots}
-
-\pgfdeclareimage[height=3cm]{WEBOTS}{figs/webots.png}%
-\pgfdeclareimage[height=3cm]{ROBOT}{figs/robot.png}%
-\pgfdeclareimage[height=3cm]{WORLD}{figs/world.png}%
-\frame{
-	\begin{columns}
-    \frametitle{What tool can we use for simulating that problem?}
-        \column{4cm}
-            Webots!
-            \begin{itemize}
-            		\item Open Source
-	                \item Python, C++, Java, etc.
-	                \item 44 robot models
-	                \item Robot model creation/customization
-	                \item Robust documentation
-            \end{itemize}
-            
-            
-		\column{5cm}
-			\pgfuseimage{WEBOTS}\\
-			\pgfuseimage{ROBOT}
-			\pgfuseimage{WORLD}
-			
-    \end{columns}
-}
-
-\section{Project Objectives}
-\frame{
-	\frametitle{Main Objective}
-	\begin{itemize}
-	    \item The objective will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters (such as Particles Filter) for robot positioning estimation, independently from the kind of robot used for in-door environments.
-	\end{itemize}
-}
-
-\frame{
-    \frametitle{How do we plan to do it?}
-    \begin{itemize}
-        \item Using Webots
-        \begin{itemize}
-            \item Create a custom robot
-            \item Randomize control actions while moving avoiding obstacles
-	        \item Use a realistic in-door environment
-        \end{itemize}{}
-	    \item Using Machine Learning and Particles Filters
-	        \begin{itemize}
-                \item Positioning estimation
-    	        \item Error correction
-        \end{itemize}
-	    \item Test the developed technique with other robots
-	\end{itemize}
-}
-
-
-\section{Preliminary Results}
-\pgfdeclareimage[height=3.8cm]{RESULTS}{figs/position3.png}%
-\pgfdeclareimage[height=3.5cm]{RESULTS1}{figs/arena.png}%
-\frame{
-	\frametitle{What have we done so far?}
-	
-	\begin{itemize}
-	    \item Robot creation
-	    \item Dummy environment creation
-	    \item Collect distance sensor data + real position coordinates
-	    \item Bayes Filter algorithm implementation
-    	    \begin{itemize}
-    	        \item \textit{Position prediction}: Odometry techniques
-    	        \item \textit{Error correction}: Training a Random Forest model using collected data
-    	    \end{itemize}
 	\end{itemize}
 	
-	\pgfuseimage{RESULTS1}
-	\pgfuseimage{RESULTS}
+	\begin{algorithm}[H]
+		maxWeight = max(particles.weight)\\
+		minWeight = min(particles.weight)\\
+		particles.weight = (maxWeight + minWeight) - particles.weight\\
+	\end{algorithm}
 }
 
-\frame{
+\section{Update Odometry Values}
 
-    \frametitle{Are the results good?}
-    \begin{itemize}
-        \item Yes! but there are improvements to be done:
-        \begin{itemize}
-            \item Collect more data (+ Simulations)
-            \item Randomize robot moves 
-            \item Train/test with other Machine Learning models
-            \item Improve performance of the error correction algorithm
-        \end{itemize}
-    \end{itemize}
+\pgfdeclareimage[height=3cm]{APP}{figs/app.png}
+\frame {
+	\begin{itemize}
+		\item The best particle will be the one whose weight is lower than the rest of the particles
+		\item Each 25 steps the best particle is selected and the odometry data is updated with the selected particle's state.
+		\item Results
+		
+	\end{itemize}
+	\begin{center}
+     		\pgfuseimage{APP}
+     	\end{center}
+	
 }
-
-\pgfdeclareimage[height=6cm]{QUESTIONS}{figs/questions.png}%
-\frame{
-    \centering
-    \pgfuseimage{QUESTIONS}
-}
-
 
 \end{document}

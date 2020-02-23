@@ -9,11 +9,11 @@ class ParticlesFilter:
     def __init__(self, environment_config, robot_initial_config, predictor):
         self.margin_replacement = 0.5
         self.mu = 0
-        self.sigma = 0.008
+        self.sigma = 0.0008
         self.sigma_theta = 0.015
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
-        self.number_of_particles = 50
+        self.number_of_particles = 30
         self.predictor = predictor
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
         x = np.random.normal(robot_initial_config.x, self.sigma, self.number_of_particles)
@@ -36,12 +36,6 @@ class ParticlesFilter:
         # calculate weights
         for particle in self.particles.transpose():
             particle[3], bad_data = self.predictor.prediction_error(particle[0], particle[1], particle[2], sensors)
-
-        # if the particle is near the robot then the error prediction will be near 0
-        # then this particle need to have more chances to be selected so we need to invert this value to be higher
-        max_weight = np.max(self.particles[3])
-        min_weight = np.min(self.particles[3])
-        self.particles[3] = (max_weight + min_weight) - self.particles[3] + 1.e-300
 
         # normalize weights
         self.normalize_weights()
