@@ -51,4 +51,4 @@ class Odometry:
         self.wheels_state.pos_left_prev = pos_left
         self.wheels_state.pos_right_prev = pos_right
 
-        return self.coordinate
+        return self.coordinate, np.array([delta_x, delta_y, delta_theta])

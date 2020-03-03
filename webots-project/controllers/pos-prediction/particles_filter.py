@@ -9,11 +9,11 @@ class ParticlesFilter:
     def __init__(self, environment_config, robot_initial_config, predictor):
         self.margin_replacement = 0.5
         self.mu = 0
-        self.sigma = 0.0008
-        self.sigma_theta = 0.015
+        self.sigma = 0.00045
+        self.sigma_theta = 2.5
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
-        self.number_of_particles = 30
+        self.number_of_particles = 500
         self.predictor = predictor
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
         x = np.random.normal(robot_initial_config.x, self.sigma, self.number_of_particles)
@@ -24,14 +24,9 @@ class ParticlesFilter:
         # theta = np.random.uniform(0, 360, self.number_of_particles)
         self.particles = np.array([x, y, theta, self.weights])
 
-    def get_particles(self, robot_configuration, sensor_measurements):
-        # self.particles = self.sampling_from_best()
-        delta_robot_config = self._calculate_delta_movement(self.robot_previous_config, robot_configuration)
-        self.robot_previous_config = robot_configuration
-        # move all the particles
-        self._apply_movement_to(self.particles, delta_robot_config)
+    def get_particles(self, delta_movement, sensors, apply_movement=True):
 
-        sensors = [sensor.getValue() for sensor in sensor_measurements]
+        self._apply_movement_to(self.particles, delta_movement)
 
         # calculate weights
         for particle in self.particles.transpose():
@@ -89,13 +84,16 @@ class ParticlesFilter:
         return RobotConfiguration(x, y, theta)
 
     def _apply_movement_to(self, particles, delta_robot_config):
-        std_x = np.random.normal(delta_robot_config.x, self.sigma, self.number_of_particles)
-        std_y = np.random.normal(delta_robot_config.y, self.sigma, self.number_of_particles)
-        std_theta = np.random.normal(delta_robot_config.theta, self.sigma_theta, self.number_of_particles)
+        std_x = np.random.normal(self.mu, self.sigma, self.number_of_particles)
+        std_y = np.random.normal(self.mu, self.sigma, self.number_of_particles)
+        std_theta = np.random.normal(self.mu, self.sigma_theta, self.number_of_particles)
+        # std_x = delta_robot_config.x
+        # std_y = delta_robot_config.y
+        # std_theta = delta_robot_config.theta
 
-        particles[0] = particles[0] + std_x
-        particles[1] = particles[1] + std_y
-        particles[2] = particles[2] + std_theta
+        particles[0] += delta_robot_config[0] + std_x
+        particles[1] += delta_robot_config[1] + std_y
+        particles[2] += delta_robot_config[2] + std_theta
 
         particles[0] = np.clip(particles[0], 0, self.environment_config.environment_dim_x)
         particles[1] = np.clip(particles[1], 0, self.environment_config.environment_dim_y)

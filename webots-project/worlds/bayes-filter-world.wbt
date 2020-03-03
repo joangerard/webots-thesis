@@ -120,8 +120,8 @@ DEF e-puck Robot {
       ]
       name "ds0"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -134,8 +134,8 @@ DEF e-puck Robot {
       ]
       name "ds1"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -148,8 +148,8 @@ DEF e-puck Robot {
       ]
       name "ds2"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -162,8 +162,8 @@ DEF e-puck Robot {
       ]
       name "ds3"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -176,8 +176,8 @@ DEF e-puck Robot {
       ]
       name "ds4"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       aperture 0.005
     }
@@ -189,8 +189,8 @@ DEF e-puck Robot {
       ]
       name "ds5"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -203,8 +203,8 @@ DEF e-puck Robot {
       ]
       name "ds6"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       type "laser"
       aperture 0.005
@@ -217,8 +217,8 @@ DEF e-puck Robot {
       ]
       name "ds7"
       lookupTable [
-        0 0 0.01
-        10 10 0.01
+        0 0 0.2
+        10 10 0.2
       ]
       aperture 0.005
     }

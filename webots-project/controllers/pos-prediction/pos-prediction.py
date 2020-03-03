@@ -13,6 +13,8 @@ from window_communicator import WindowCommunicator
 from robot_configuration import RobotConfiguration
 from environment_configuration import EnvironmentConfiguration
 from particles_filter import ParticlesFilter
+from predictor_NN_sensors import PredictorNNSensors
+from predictor_NN_coordinates import PredictorNNCoordinates
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -72,12 +74,11 @@ data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
-predictor = PredictorNN(data_collector)
+# predictor = PredictorNN(data_collector)
 # predictor = Predictor()
+predictor = PredictorNNSensors()
+# predictorCoord = PredictorNNCoordinates()
 
-robot_initial_conf = RobotConfiguration(INIT_X, INIT_Y, INIT_ANGLE)
-environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
-particles_filter = ParticlesFilter(environment_conf, robot_initial_conf, predictor)
 movement_random = True
 
 
@@ -121,7 +122,6 @@ def save_supervisor_coordinates():
     y.append(y_coordinate)
     angle = get_bearing_degrees()
     theta.append(angle)
-
 
 def save_odometry_coordinates(coordinate):
     # convert robot coordinates into global coordinate system
@@ -253,6 +253,12 @@ if __name__ == '__main__':
     count = 0
     particles = np.array([[], []])
     last_move = 'none'
+    apply_movement = True
+    delta_movement = np.array([0, 0, 0])
+
+    robot_initial_conf = RobotConfiguration(INIT_X, INIT_Y, convert_angle_to_xy_coordinates(INIT_ANGLE))
+    environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
+    particles_filter = ParticlesFilter(environment_conf, robot_initial_conf, predictor)
 
     while(True):
         # receive message
@@ -262,8 +268,10 @@ if __name__ == '__main__':
         elif message == 'stop_randomness':
             movement_random = False
 
-        odometry_info = odometry.track_step(ENCODER_UNIT * (positionLeft.getValue()),
+        odometry_info, delta_movement = odometry.track_step(ENCODER_UNIT * (positionLeft.getValue()),
                                             ENCODER_UNIT * (positionRight.getValue()))
+
+        delta_movement[2] = convert_angle_to_xy_coordinates(delta_movement[2])
 
         if not step() and CAPTURING_DATA:
             print('saving data')
@@ -301,28 +309,37 @@ if __name__ == '__main__':
         motorLeft.setVelocity(left_speed)
         motorRight.setVelocity(right_speed)
 
-        # get particles
-        if not CAPTURING_DATA and are_there_sensor_measurements(distanceSensors):
-            robot_conf = RobotConfiguration(x_odometry[-1], y_odometry[-1], theta_odometry[-1])
-            particles = particles_filter.get_particles(robot_conf, distanceSensors)
-
         # correction step each PRED_STEPS steps
         if not CAPTURING_DATA and count % PRED_STEPS == 0 and count != 0:
-            # select the particle whose weight is greater than the rest.
-            bestParticleWeight = np.max(particles[3])
-            bestParticleIndex, = np.where(np.isclose(particles[3], bestParticleWeight))
+            particles = particles_filter.get_particles(delta_movement, distance_sensors_info[-1], apply_movement)
 
-            if bestParticleIndex.size > 0:
-                bestParticleIndex = bestParticleIndex[0]
-                # save correction
-                x_pred.append(particles[0][bestParticleIndex])
-                y_pred.append(particles[1][bestParticleIndex])
-                theta_pred.append(particles[2][bestParticleIndex])
+            weighted_sum = np.sum(particles[3])
 
-                # calculate correction
-                correction_x += (x_pred[-1] - x_odometry[-1])
-                correction_y += (y_pred[-1] - y_odometry[-1])
-                correction_theta += (theta_pred[-1] - theta_odometry[-1])
+            # get weighted average from particles data
+            x_prim = np.sum(particles[0]*particles[3])/weighted_sum
+            y_prim = np.sum(particles[1]*particles[3])/weighted_sum
+            theta_prim = np.sum(particles[2]*particles[3])/weighted_sum
+
+            # # get the position prediction given the sensor measurements
+            # predicted_coord = predictorCoord.predict(sensors)
+            #
+            # # combine both previous models
+            # x_pred.append((x_prim + float(predicted_coord[['x']]))/2)
+            # y_pred.append((y_prim + float(predicted_coord[['y']]))/2)
+            # theta_pred.append((theta_prim + float(predicted_coord[['theta']]))/2)
+
+            x_pred.append(x_prim)
+            y_pred.append(y_prim)
+            theta_pred.append(theta_prim)
+
+            print('x: {0}, y: {1}, theta: {2} | real_x: {3}, real_y: {4}, real_theta: {5}'
+                  .format(x_pred[-1], y_pred[-1], theta_pred[-1], x[-1], y[-1], theta[-1]))
+
+            # calculate correction
+            correction_x += (x_pred[-1] - x_odometry[-1])
+            correction_y += (y_pred[-1] - y_odometry[-1])
+            correction_theta += (theta_pred[-1] - theta_odometry[-1])
+
 
         # send data to html page
         window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())
