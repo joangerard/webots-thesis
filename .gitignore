@@ -25,3 +25,4 @@ webots-project/plugins/robot_windows/pos-prediction/node_modules/*
 *.pyc
 *.eps
 *.csv
+*.pckl
