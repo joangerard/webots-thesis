@@ -6,7 +6,7 @@ class DataCollector:
 
     def __init__(self):
         self.path = 'results/robot_info_dataset.csv'
-        self.read_path = 'results/robot_info_dataset-read.csv'
+        self.read_path = 'results/robot_info_dataset-jumped.csv'
 
     def collect(self, real_x, real_y, real_theta, distances):
         # calculate DELTA_X DELTA_S: take real_x and displace to one position ->

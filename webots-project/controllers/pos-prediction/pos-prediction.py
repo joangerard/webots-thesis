@@ -18,7 +18,9 @@ from predictor_NN_coordinates import PredictorNNCoordinates
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import pickle
 
+np.random.seed(13482736)
 # os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 # hello = tf.constant("hello TensorFlow!")
@@ -75,9 +77,9 @@ movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
 # predictor = PredictorNN(data_collector)
-# predictor = Predictor()
-predictor = PredictorNNSensors()
-# predictorCoord = PredictorNNCoordinates()
+predictor = Predictor()
+# predictor = PredictorNNSensors()
+predictorCoord = PredictorNNCoordinates()
 
 movement_random = True
 
@@ -260,7 +262,15 @@ if __name__ == '__main__':
     environment_conf = EnvironmentConfiguration(MAX_X, MAX_Y)
     particles_filter = ParticlesFilter(environment_conf, robot_initial_conf, predictor)
 
-    while(True):
+    errorPos = []
+    cont = True
+
+    while(cont):
+        if count == 2000:
+            cont = False
+
+        print(count)
+
         # receive message
         message = window_communicator.receiveMessage()
         if message == 'start_randomness':
@@ -273,6 +283,7 @@ if __name__ == '__main__':
 
         delta_movement[2] = convert_angle_to_xy_coordinates(delta_movement[2])
 
+        # for capturing robot positioning
         if not step() and CAPTURING_DATA:
             print('saving data')
             data_collector.collect(x, y, theta, np.array(distance_sensors_info))
@@ -292,7 +303,7 @@ if __name__ == '__main__':
         # left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
         left_speed, right_speed = 0, 0
         if movement_random:
-            left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
+            left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
             last_move = 'none'
         else:
             if last_move == 'none' or (message and last_move != message):
@@ -311,7 +322,7 @@ if __name__ == '__main__':
 
         # correction step each PRED_STEPS steps
         if not CAPTURING_DATA and count % PRED_STEPS == 0 and count != 0:
-            particles = particles_filter.get_particles(delta_movement, distance_sensors_info[-1], apply_movement)
+            particles = particles_filter.get_particles(delta_movement, distance_sensors_info[-1], count % 3 == 0)
 
             weighted_sum = np.sum(particles[3])
 
@@ -321,7 +332,7 @@ if __name__ == '__main__':
             theta_prim = np.sum(particles[2]*particles[3])/weighted_sum
 
             # # get the position prediction given the sensor measurements
-            # predicted_coord = predictorCoord.predict(sensors)
+            # predicted_coord = predictorCoord.predict(distance_sensors_info[-1])
             #
             # # combine both previous models
             # x_pred.append((x_prim + float(predicted_coord[['x']]))/2)
@@ -332,17 +343,22 @@ if __name__ == '__main__':
             y_pred.append(y_prim)
             theta_pred.append(theta_prim)
 
-            print('x: {0}, y: {1}, theta: {2} | real_x: {3}, real_y: {4}, real_theta: {5}'
-                  .format(x_pred[-1], y_pred[-1], theta_pred[-1], x[-1], y[-1], theta[-1]))
+            # print('x: {0}, y: {1}, theta: {2} | real_x: {3}, real_y: {4}, real_theta: {5} | weight: {6}'
+            #       .format(x_pred[-1], y_pred[-1], theta_pred[-1], x[-1], y[-1], theta[-1], weighted_sum))
 
             # calculate correction
             correction_x += (x_pred[-1] - x_odometry[-1])
             correction_y += (y_pred[-1] - y_odometry[-1])
             correction_theta += (theta_pred[-1] - theta_odometry[-1])
 
+        # angleDiff = 180 - abs(abs(theta[-1] - theta_odometry[-1]) - 180)
+        # if (angleDiff > 100):
+        #     print("Theta: {0}; Theta Odometry: {1}".format(theta[-1], theta_odometry[-1]))
+
+        errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
 
         # send data to html page
-        window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())
+        # window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())
 
 
         # move robot to a random position after a while
@@ -351,4 +367,5 @@ if __name__ == '__main__':
 
         count += 1
 
-
+    print('saving error')
+    pickle.dump(errorPos, open("data_rf_500.pckl", "wb"))

@@ -34,13 +34,13 @@ class Predictor:
 
         filename = 'models/train_data_model_rf_5.pckl'
         # if model exists load otherwise create it
-        if os.path.isfile(filename):
-            self.model = pickle.load(open(filename, 'rb'))
-        else:
-            reg = RandomForestRegressor(n_estimators=5, criterion='mse', verbose=False, n_jobs=1)
-            reg.fit(inputs, output)
-            pickle.dump(reg, open(filename, 'wb'))
-            self.model = reg
+        # if os.path.isfile(filename):
+        #     self.model = pickle.load(open(filename, 'rb'))
+        # else:
+        reg = RandomForestRegressor(n_estimators=5, criterion='mse', verbose=False, n_jobs=5)
+        reg.fit(inputs, output)
+        # pickle.dump(reg, open(filename, 'wb'))
+        self.model = reg
 
     def predict(self, x, y, theta, sensors):
         pre_sensors = self.model.predict([[x, y, theta]])
@@ -65,7 +65,6 @@ class Predictor:
         pre_sensors = self.model.predict([[x, y, theta]])
 
         err = 0
-        n_sensors = len(sensors)
         bad_data = True
 
         for ix, elem in enumerate(pre_sensors[0]):

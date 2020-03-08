@@ -1,0 +1,371 @@
+\documentclass{beamer}
+
+\mode<presentation>{
+\usetheme{Dresden}
+\setbeamercovered{transparent}
+\usecolortheme{lsc}
+}
+
+\mode<handout>{
+  % tema simples para ser impresso
+  \usepackage[bar]{beamerthemetree}
+  % Colocando um fundo cinza quando for gerar transparências para serem impressas
+  % mais de uma transparência por página
+  \beamertemplatesolidbackgroundcolor{black!5}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage[brazil]{varioref}
+\usepackage[english,brazil]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+
+\newcommand\Fontvi{\fontsize{6}{10}\selectfont}
+
+\beamertemplatetransparentcovereddynamic
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\setbeamercolor{footline}{fg=black}
+\setbeamerfont{footline}{series=\bfseries}
+
+\title[Machine Learning for Probabilistic Robotics with Webots]{Machine Learning for Probabilistic Robotics with Webots}
+\author[Joan Gerard]{%
+  Joan Gerard\inst{1} \\
+  Promotor: Prof. Gianluca Bontempi \inst{1}}
+  \institute[ULB]{
+  \inst{1}%
+     Universit\'e Libre de Bruxelles}
+
+% Se comentar a linha abaixo, irá aparecer a data quando foi compilada a apresentação  
+\date{March 9, 2019}
+
+
+
+\AtBeginSection[]{
+  \begin{frame}<beamer>
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{Probabilistic Robotics}
+
+\frame{
+    \frametitle{Robot Positioning Problem}
+            \begin{itemize}
+            	\item A robot needs to deal with uncertainty most of the time.
+		\item It needs to predict and preserve its current position and orientation within the environment.
+            \end{itemize}
+}
+
+
+\frame{
+    \frametitle{Robot Positioning Problem}
+            \begin{itemize}
+            	\item Navigation is about controlling and operating the course of a robot and it is one of the most challenging skills that a mobile robot needs to master in order to successfully 				moving through the environment.
+		\item Succeeding in navigation means to succeed likewise in:
+		\begin{itemize}
+			\item Sense
+			\item Localization
+			\item Cognition
+			\item Control Action
+		\end{itemize}
+            \end{itemize}
+
+}
+
+\pgfdeclareimage[height=4.5cm]{RM}{figs/whereAmI.png}
+\frame{
+	\frametitle{Robot Positioning Problem}
+	\begin{itemize}
+		 \item Local Robot Positioning (position tracking): The robot knows its initial position.
+                \item Global Robot Positioning: The robot does not know its initial position and it is able to estimate it even in a global uncertainty. Ex. Kidnapped robot problem.
+            \pgfuseimage{RM}
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=6cm]{BAYES-FILTER-1}{figs/bayes-filter-1.png}%
+\pgfdeclareimage[height=6cm]{BAYES-FILTER-2}{figs/bayes-filter-2.png}%
+\frame{
+	\frametitle{Bayes Filter}
+	\begin{columns}
+	    \column{5.5cm}
+	        \begin{itemize}
+	            \item Prediction
+	        \end{itemize}
+        	\pgfuseimage{BAYES-FILTER-2}
+        
+        \column{5.5cm}
+            \begin{itemize}
+	            \item Error Correction
+	        \end{itemize}
+        	\pgfuseimage{BAYES-FILTER-1}
+	\end{columns}
+}
+
+\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-1}{figs/particles-1.png}%
+\pgfdeclareimage[height=3cm]{PARTICLE-FILTER-2}{figs/particles-2.png}%
+\pgfdeclareimage[height=3.0cm]{PARTICLE-FILTER-3}{figs/particles-3.png}%
+\frame{
+	\frametitle{Particles Filter}
+	{\small 
+	\begin{columns}
+	\column{4cm}
+	\begin{itemize}
+		\item Each particle has a state $(x, y, \theta)$ and a weight.
+		\item The weight is an indicator of how close the particle' state is to the real state.
+	\end{itemize}
+	\column{8cm}
+	\centering
+
+    	\pgfuseimage{PARTICLE-FILTER-1}
+    	\pgfuseimage{PARTICLE-FILTER-2}\\
+    	\pgfuseimage{PARTICLE-FILTER-3}
+	\end{columns}
+	
+	}
+	
+}
+
+\section{Webots}
+
+\pgfdeclareimage[height=3cm]{WEBOTS}{figs/webots.png}%
+\pgfdeclareimage[height=3cm]{ROBOT}{figs/robot.png}%
+\pgfdeclareimage[height=3cm]{WORLD}{figs/world.png}%
+\frame{
+	\begin{columns}
+    \frametitle{What is Webots?}
+        \column{4cm}
+            \begin{itemize}
+            		\item Tool for simulating robots in virtual environments
+            		\item Open Source
+	                \item Python, C++, Java, etc.
+	                \item 44 robot models
+	                \item Robot model creation/customization
+	                \item Robust documentation
+            \end{itemize}
+            
+            
+		\column{5cm}
+		\pgfuseimage{WEBOTS}\\
+		\pgfuseimage{ROBOT}
+		\pgfuseimage{WORLD}
+			
+    \end{columns}
+}
+
+\section{Project Objectives}
+\frame{
+	\frametitle{Objectives:}
+	\begin{itemize}
+	    \item The objective will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters (such as Particles Filter) for robot positioning estimation for in-door environments.
+	     \item Find a solution in which the learned knowledge can be transferred from one environment to another without the need to go through the training process using transfer learning techniques.
+	\end{itemize}
+}
+
+\section{Experiments}
+\pgfdeclareimage[height=2.5cm]{ARENA}{figs/arena.png}%
+\frame{
+    \frametitle{Problem Formulation}
+    
+    \begin{columns}
+		\column{7cm}
+		{\small
+		 \begin{itemize}
+        \item There is a robot with 8 laser sensors around it.
+        \item The sensors measure the distance between the robot and the closest object.
+        \item There is an arena of 2x1.5m with four walls.
+        \item The robot has odometry data available.
+        \item The robot is positioned in the middle of the arena and knows its initial position.
+        \item The robot needs to track its position.
+    \end{itemize}
+    }
+		\column{4cm}
+		\begin{center}
+			\pgfuseimage{ARENA}\\
+			\pgfuseimage{ROBOT}
+		\end{center}
+	\end{columns}
+}
+
+\frame{
+    \frametitle{Solution Approach}
+    \begin{itemize}
+    	\item Capture data with the simulator.
+	\begin{itemize}
+    		\item True robot position $(x, y, \theta)$.
+		\item Sensor measurements $(s_1, s_2, ..., s_8)$.
+    	\end{itemize}
+	\item Train ML Models
+	\begin{itemize}
+    		\item Train 8 neural networks that receives a robot state as input and returns the estimated sensor measurements.
+    	\end{itemize}
+	\item Put the particles filter together with the ML Models to get the robot position estimation.
+	\item Correct the position of the robot using the robot position estimation.
+    \end{itemize}
+}
+
+\frame{
+    \frametitle{Capture data with the simulator}
+    \begin{itemize}
+    	\item Robot turns with a probability of 0.2; otherwise, it goes straight.
+	\item Robot turns randomly to left or right maximum 30 degrees.
+	\item Robot avoids colliding with the walls.
+	\item Data is captured each 20 robot steps.
+	\item The Data is captured for 10 minutes in fast simulation mode.
+    \end{itemize}
+}
+
+\frame{
+    \frametitle{Train ML Models}
+	\begin{itemize}
+		\item The data is normalized and shuffled.
+		\item Many NN architectures were tested. The one that gave better results was:
+		\begin{itemize}
+			\item Input Layer: 3 neurons
+			\item Intermediate Layer: Fully connected with 10 neurons
+			\item Intermediate Layer: Fully connected with 6 neurons
+			\item Intermediate Layer: Fully connected with 3 neurons
+			\item Output Layer: 1 neuron
+		\end{itemize}
+	\end{itemize}
+}
+
+\frame{
+	\frametitle{Particles Filter + ML Model}
+	\begin{small}
+	\begin{algorithm}[H]
+
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{deltaMove, sensorsData}
+\Output{particles}
+\BlankLine
+  particles.state = particles.state + deltaMove\\
+  addRandomMove(particles.state)\\
+  \ForEach{particle $\in$ particles}{
+   	particle.weight $\leftarrow$ predictError(particle.state, sensorsData)\\
+  }
+  normalizeWeights(particles)\\
+  particles = resamplingBasedOnWeights(prob=particles.weight, replace=True)\\
+  
+  \Return particles
+  
+\end{algorithm}
+\end{small}
+}
+
+
+\frame{
+	\frametitle{Correction Step}
+	\begin{itemize}
+		\item Take the weighted average state of all the particles.
+		\item This value becomes the estimated state of the robot.
+		\item Apply the correction step at each robot step.
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=6cm]{RESULTS}{figs/results.png}%
+\pgfdeclareimage[height=5cm]{ANGLES}{figs/particles-angles.png}%
+\pgfdeclareimage[height=5cm]{PARTICLES}{figs/particles.png}%
+\pgfdeclareimage[height=6cm]{ODO}{figs/odometry.png}%
+
+\frame{
+	\frametitle{Experiments}
+	\begin{itemize}
+		\item Robot walks in the arena avoiding to hit the walls.
+		\item The experiment was run during 2200 robot steps.
+		\item The experiment was repeated each time with different number of particles: 30, 100, 500, 2000.
+		\item At each robot step two errors are calculated: one for the $(x, y)$ coordinates and another for the angle $\theta$.
+		\centering
+		\begin{equation}
+			Error_{xy} = \sqrt{(x - \hat{x})^2 + (y - \hat{y})^2}
+		\end{equation}
+		\begin{equation}
+			Error_{\theta} = 180 - |180 - |\theta - \hat{\theta}||
+		\end{equation}
+	\end{itemize}
+}
+
+\section{Results}
+\frame{
+	\frametitle{Odometry vs Real position}
+	\centering
+	\pgfuseimage{ODO}\\
+}
+
+\frame{
+	\frametitle{Particles vs Real position}
+	\begin{itemize}
+		\item 1000 particles used
+	\end{itemize}
+	\centering
+	\pgfuseimage{RESULTS}\\
+}
+
+\frame{
+	\frametitle{Results}
+	
+	\begin{columns}
+		\column{6cm}
+		\centering
+		$Error_{xy}$ 
+		\pgfuseimage{PARTICLES}
+		\column{6cm}
+		\centering
+		$Error_{\theta}$ 
+		\pgfuseimage{ANGLES}
+	\end{columns}
+}
+
+\frame{
+	\frametitle{Drawbacks}
+	\begin{itemize}
+		\item The problem requires to train 8 models which is time consuming.
+		\item It does not generalize for unseen environments.
+		\item The particle's filter algorithm works slow for a big amount of particles.
+		\item Model highly dependent of odometry data.
+	\end{itemize}
+}
+\section{Future Plans}
+\frame{
+	
+	\begin{itemize}
+		\item Find an efficient model that receives as input the sensor measurements and predicts the robot position. Combine it with the previous model to improve the performance.
+		\item Train a model that receives $(\delta x, \delta y, \delta \theta)$ as input and predicts $(\delta s_1, ..., \delta s_8)$ and equivalently that receives $(\delta s_1, ..., \delta s_8)$ as input and predicts $(\delta x, \delta y, \delta \theta)$.
+		\item Produce results for different training sizes, different robots and room configurations.
+		\item Implement online learning to improve gradually the models.
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=6cm]{QUESTIONS}{figs/questions.png}%
+\frame{
+    \centering
+    \pgfuseimage{QUESTIONS}\\
+    (Suggestions and critics are also welcomed)
+}
+
+
+\end{document}

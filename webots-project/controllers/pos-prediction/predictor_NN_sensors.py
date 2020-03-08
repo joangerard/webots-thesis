@@ -69,7 +69,6 @@ class PredictorNNSensors:
                 bad_data = False
                 # print('err', elem)
                 # print('true', true_dist[ix])
-
                 err += (elem - sensors[ix]) ** 2
 
-        return np.sqrt(1/err), bad_data
+        return 1/np.sqrt(err), bad_data

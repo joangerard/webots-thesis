@@ -64,21 +64,31 @@ function loadChartParticles(items) {
     let xy = {
         x: items.x,
         y: items.y,
-        name: 'Real Position'
+        name: 'Real Position',
+        mode: 'lines',
+          line: {
+            width: 1.5
+          }
     }
     
     let xy_pred = {
         x: items.particles_x,
         y: items.particles_y,
         name: 'Particles',
-        mode: 'markers'
+        mode: 'markers',
+        marker: {
+            size: 6
+        }
     }
     
      let xy_odometry = {
         x: items.x_odometry,
         y: items.y_odometry,
         name: 'Odometry',
-        mode: 'markers'
+         mode: 'lines',
+          line: {
+            width: 1.5
+          }
     }
 
     let data = [
