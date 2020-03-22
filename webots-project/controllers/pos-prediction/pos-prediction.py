@@ -38,7 +38,7 @@ INIT_X = 1
 INIT_Y = 0.75
 INIT_ANGLE = np.pi
 PRED_STEPS = 1
-CAPTURING_DATA = False
+CAPTURING_DATA = True
 MOVING_ROBOT_STEPS = 100
 correction_x = 0
 correction_y = 0
@@ -76,8 +76,8 @@ data_collector = DataCollector()
 movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
-# predictor = PredictorNN(data_collector)
-predictor = Predictor()
+predictor = PredictorNN(data_collector)
+# predictor = Predictor()
 # predictor = PredictorNNSensors()
 predictorCoord = PredictorNNCoordinates()
 
@@ -188,10 +188,10 @@ def plot():
     plt.xlim([0, MAX_X])
     plt.xlabel("x")
     plt.ylabel("y")
-    plt.plot(x, y, label="real")
-    plt.plot(x_odometry, y_odometry, label="odometry")
-    plt.plot(x_pred, y_pred, 's', label="correction", marker='o')
-    plt.title("Robot position estimation")
+    plt.plot(x, y, 'ro', markersize="0.1")
+    # plt.plot(x_odometry, y_odometry, label="odometry")
+    # plt.plot(x_pred, y_pred, 's', label="correction", marker='o')
+    plt.title("Robot position")
     plt.legend()
     plt.savefig("results/position.eps", format='eps')
 
@@ -234,16 +234,15 @@ def predict(x, y, theta, sensors_data):
 
 
 def move_robot_to_random_position():
-    # new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
-    # new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
-    # old_z = robot_trans.getSFVec3f()[1]
-
-    # new_theta = -np.pi + np.random.random() * 2 * np.pi
-
-    # print('New Values: ', new_x, new_y, old_z)
     robot_sup = robot.getFromDef("e-puck")
+    robot_sup.resetPhysics()
     robot_trans = robot_sup.getField("translation")
-    robot_trans.setSFVec3f([0, 0, 0])
+    robot_rotation = robot_sup.getField("rotation")
+
+    new_x, new_y = xy_to_robot(np.random.uniform(0.1, MAX_X-0.1), np.random.uniform(0.1, MAX_Y - 0.1))
+    new_angle = np.random.uniform(0, 2 * np.pi)
+    robot_trans.setSFVec3f([new_y, 0, new_x])
+    robot_rotation.setSFRotation([0, 1, 0, new_angle])
 
 
 if __name__ == '__main__':
@@ -253,6 +252,7 @@ if __name__ == '__main__':
                         ENCODER_UNIT * (positionRight.getValue()), INIT_X, INIT_Y, INIT_ANGLE)
 
     count = 0
+    number_trajectories = 0
     particles = np.array([[], []])
     last_move = 'none'
     apply_movement = True
@@ -266,10 +266,8 @@ if __name__ == '__main__':
     cont = True
 
     while(cont):
-        if count == 2000:
-            cont = False
-
-        print(count)
+        # if count == 2000:
+        #     cont = False
 
         # receive message
         message = window_communicator.receiveMessage()
@@ -303,7 +301,7 @@ if __name__ == '__main__':
         # left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
         left_speed, right_speed = 0, 0
         if movement_random:
-            left_speed, right_speed = movement_controller.calculate_velocity(distanceSensors)
+            left_speed, right_speed = movement_controller.calculate_velocity_random_move(distanceSensors)
             last_move = 'none'
         else:
             if last_move == 'none' or (message and last_move != message):
@@ -355,17 +353,20 @@ if __name__ == '__main__':
         # if (angleDiff > 100):
         #     print("Theta: {0}; Theta Odometry: {1}".format(theta[-1], theta_odometry[-1]))
 
-        errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
+        # errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
 
         # send data to html page
         # window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())
 
 
         # move robot to a random position after a while
-        # if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
-        #     move_robot_to_random_position()
+        if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
+            move_robot_to_random_position()
+            number_trajectories += 1
 
         count += 1
 
-    print('saving error')
-    pickle.dump(errorPos, open("data_rf_500.pckl", "wb"))
+    print("number of trajectories: {0}; robot steps: {1}".format(number_trajectories, count))
+    # print('saving error')
+    # pickle.dump(errorPos, open("data_rf_500.pckl", "wb"))
+

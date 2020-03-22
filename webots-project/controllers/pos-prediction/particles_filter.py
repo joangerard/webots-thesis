@@ -14,7 +14,7 @@ class ParticlesFilter:
         self.sigma_theta = 10
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
-        self.number_of_particles = 500
+        self.number_of_particles = 30
         self.predictor = predictor
         self.alpha = 0.7
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
