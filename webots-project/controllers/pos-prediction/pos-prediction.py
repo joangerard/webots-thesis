@@ -77,8 +77,8 @@ movement_controller = MovementController()
 window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
 # predictor = PredictorNN(data_collector)
-predictor = Predictor()
-# predictor = PredictorNNSensors()
+# predictor = Predictor()
+predictor = PredictorNNSensors()
 predictorCoord = PredictorNNCoordinates()
 
 movement_random = True

@@ -1,4 +1,4 @@
-#VRML_SIM R2019b utf8
+#VRML_SIM R2020a utf8
 WorldInfo {
 }
 Viewpoint {
@@ -44,7 +44,7 @@ DEF e-puck Robot {
         }
       ]
       endPoint Solid {
-        translation -0.045 0.025 0
+        translation -0.044999999999994 0.025 0
         rotation -1 0 0 0
         children [
           DEF WHEEL Transform {
@@ -87,7 +87,7 @@ DEF e-puck Robot {
         }
       ]
       endPoint Solid {
-        translation 0.04499999840102954 0.025003865829176117 0
+        translation 0.044999998401025004 0.025003865829176117 4.3172739925959654e-18
         rotation -1 0 0 0
         children [
           USE WHEEL
@@ -120,8 +120,8 @@ DEF e-puck Robot {
       ]
       name "ds0"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -134,8 +134,8 @@ DEF e-puck Robot {
       ]
       name "ds1"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -148,8 +148,8 @@ DEF e-puck Robot {
       ]
       name "ds2"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -162,8 +162,8 @@ DEF e-puck Robot {
       ]
       name "ds3"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -176,8 +176,8 @@ DEF e-puck Robot {
       ]
       name "ds4"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       aperture 0.005
     }
@@ -189,8 +189,8 @@ DEF e-puck Robot {
       ]
       name "ds5"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -203,8 +203,8 @@ DEF e-puck Robot {
       ]
       name "ds6"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       type "laser"
       aperture 0.005
@@ -217,8 +217,8 @@ DEF e-puck Robot {
       ]
       name "ds7"
       lookupTable [
-        0 0 0.2
-        10 10 0.2
+        0 0 0.05
+        10 10 0.05
       ]
       aperture 0.005
     }
