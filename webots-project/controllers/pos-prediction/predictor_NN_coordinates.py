@@ -30,7 +30,7 @@ class PredictorNNCoordinates:
         return outputs*(self.output_max - self.output_min)+self.output_min
 
     def predict(self, sensors):
-        features = self.normalize_inputs(sensors)
-        coordinates = self.denormalize_output(self.model.predict(np.array([features]))[0])
+        # features = self.normalize_inputs(sensors)
+        coordinates = self.model.predict(np.array([sensors]))[0]
 
         return coordinates

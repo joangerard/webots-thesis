@@ -9,12 +9,12 @@ class ParticlesFilter:
     def __init__(self, environment_config, robot_initial_config, predictor):
         self.margin_replacement = 0.5
         self.mu = 0
-        self.sigma = 0.0055
-        self.sigma_x = 0.0055
-        self.sigma_theta = 10
+        self.sigma = 0.001
+        self.sigma_x = 0.001
+        self.sigma_theta = 2
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
-        self.number_of_particles = 500
+        self.number_of_particles = 30
         self.predictor = predictor
         self.alpha = 0.7
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
@@ -34,16 +34,15 @@ class ParticlesFilter:
         for particle in self.particles.transpose():
             particle[3], bad_data = self.predictor.prediction_error(particle[0], particle[1], particle[2], sensors)
 
-
-
+        self.normalize_weights()
 
         # resampling based on weights
         if resampling:
             # self.particles[3] = self.particles[3]/(self.alpha * self.particles[3] + (1-self.alpha)*1/self.number_of_particles)
             # normalize weights
-            self.normalize_weights()
             indexes = np.random.choice(range(0, self.number_of_particles), self.number_of_particles, p=self.particles[3], replace=True)
             self.particles = self.particles.transpose()[indexes].transpose()
+            self.normalize_weights()
 
         return self.particles
 

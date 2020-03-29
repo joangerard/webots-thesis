@@ -71,7 +71,7 @@ function loadChartParticles(items) {
           }
     }
     
-    let xy_pred = {
+    let xy_particles = {
         x: items.particles_x,
         y: items.particles_y,
         name: 'Particles',
@@ -79,6 +79,16 @@ function loadChartParticles(items) {
         marker: {
             size: 6
         }
+    }
+    
+    let xy_pred = {
+        x: items.x_pred,
+        y: items.y_pred,
+        name: 'Particles Prediction',
+         mode: 'lines',
+          line: {
+            width: 1.5
+          }
     }
     
      let xy_odometry = {
@@ -93,12 +103,13 @@ function loadChartParticles(items) {
 
     let data = [
         xy,
-        xy_pred,
-        xy_odometry
+        xy_particles,
+        xy_odometry,
+        xy_pred
     ]
 
     var layout = {
-        title: 'Real Position vs Particles',
+        title: 'Real Position, Particles, Odometry',
         width: 800,
         height: 600,
         margin: {

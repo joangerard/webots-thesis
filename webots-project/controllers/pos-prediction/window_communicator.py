@@ -20,7 +20,7 @@ class WindowCommunicator:
                 }
             }))
 
-    def sendCoordinatesParticles(self, x, y, x_odometry, y_odometry, particles):
+    def sendCoordinatesParticles(self, x, y, x_odometry, y_odometry, x_pred, y_pred, particles):
         self.robot.wwiSendText(json.dumps(
             {
                 'items': {
@@ -28,6 +28,8 @@ class WindowCommunicator:
                     'y': y,
                     'x_odometry': x_odometry,
                     'y_odometry': y_odometry,
+                    'x_pred': x_pred,
+                    'y_pred': y_pred,
                     'particles_x': particles[0],
                     'particles_y': particles[1]
                 }

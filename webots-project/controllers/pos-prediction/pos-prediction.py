@@ -15,6 +15,7 @@ from environment_configuration import EnvironmentConfiguration
 from particles_filter import ParticlesFilter
 from predictor_NN_sensors import PredictorNNSensors
 from predictor_NN_coordinates import PredictorNNCoordinates
+from predictor_NN_sensors_not_normalized import PredictorNNSensorsNotNormalized
 import matplotlib.pyplot as plt
 import numpy as np
 import math
@@ -78,7 +79,9 @@ window_communicator = WindowCommunicator(robot)
 # predictor = PredictorOnline(data_collector)
 # predictor = PredictorNN(data_collector)
 # predictor = Predictor()
-predictor = PredictorNNSensors()
+# predictor = PredictorNNSensors()
+
+predictor = PredictorNNSensorsNotNormalized()
 predictorCoord = PredictorNNCoordinates()
 
 movement_random = True
@@ -127,9 +130,9 @@ def save_supervisor_coordinates():
 
 def save_odometry_coordinates(coordinate):
     # convert robot coordinates into global coordinate system
-    x_odometry.append(coordinate.x + correction_x)
-    y_odometry.append(coordinate.y + correction_y)
-    theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta) + correction_theta)
+    x_odometry.append(coordinate.x)
+    y_odometry.append(coordinate.y)
+    theta_odometry.append(convert_angle_to_xy_coordinates(coordinate.theta))
 
 def save_sensor_distances(distanceSensors):
     distances = []
@@ -234,16 +237,19 @@ def predict(x, y, theta, sensors_data):
 
 
 def move_robot_to_random_position():
-    # new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
-    # new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
+    new_x = -(1/2 * MAX_X - 0.1) + np.random.random() * (MAX_X - 0.2)
+    new_y = -(1/2 * MAX_Y - 0.1) + np.random.random() * (MAX_Y - 0.2)
     # old_z = robot_trans.getSFVec3f()[1]
 
-    # new_theta = -np.pi + np.random.random() * 2 * np.pi
+    new_theta = np.random.random() * 2 * np.pi
 
     # print('New Values: ', new_x, new_y, old_z)
     robot_sup = robot.getFromDef("e-puck")
     robot_trans = robot_sup.getField("translation")
-    robot_trans.setSFVec3f([0, 0, 0])
+    robot_rotation = robot_sup.getField("rotation")
+    robot_trans.setSFVec3f([new_y, 0, new_x])
+    robot_rotation.setSFRotation([0, 1, 0, new_theta])
+    robot_sup.resetPhysics()
 
 
 if __name__ == '__main__':
@@ -266,10 +272,10 @@ if __name__ == '__main__':
     cont = True
 
     while(cont):
-        if count == 2000:
-            cont = False
+        # if count == 1000:
+        #     cont = False
 
-        print(count)
+        # print(count)
 
         # receive message
         message = window_communicator.receiveMessage()
@@ -322,7 +328,7 @@ if __name__ == '__main__':
 
         # correction step each PRED_STEPS steps
         if not CAPTURING_DATA and count % PRED_STEPS == 0 and count != 0:
-            particles = particles_filter.get_particles(delta_movement, distance_sensors_info[-1], count % 3 == 0)
+            particles = particles_filter.get_particles(delta_movement, distance_sensors_info[-1], count % 2 == 0)
 
             weighted_sum = np.sum(particles[3])
 
@@ -334,10 +340,10 @@ if __name__ == '__main__':
             # # get the position prediction given the sensor measurements
             # predicted_coord = predictorCoord.predict(distance_sensors_info[-1])
             #
+            # print(predicted_coord)
             # # combine both previous models
-            # x_pred.append((x_prim + float(predicted_coord[['x']]))/2)
-            # y_pred.append((y_prim + float(predicted_coord[['y']]))/2)
-            # theta_pred.append((theta_prim + float(predicted_coord[['theta']]))/2)
+            # x_pred.append((x_prim + float(predicted_coord[0]))/2)
+            # y_pred.append((y_prim + float(predicted_coord[1]))/2)
 
             x_pred.append(x_prim)
             y_pred.append(y_prim)
@@ -346,26 +352,24 @@ if __name__ == '__main__':
             # print('x: {0}, y: {1}, theta: {2} | real_x: {3}, real_y: {4}, real_theta: {5} | weight: {6}'
             #       .format(x_pred[-1], y_pred[-1], theta_pred[-1], x[-1], y[-1], theta[-1], weighted_sum))
 
-            # calculate correction
-            correction_x += (x_pred[-1] - x_odometry[-1])
-            correction_y += (y_pred[-1] - y_odometry[-1])
-            correction_theta += (theta_pred[-1] - theta_odometry[-1])
+            # errorPos.append(np.sqrt((x[-1] - x_pred[-1]) ** 2 + (y[-1] - y_pred[-1]) ** 2))
+
 
         # angleDiff = 180 - abs(abs(theta[-1] - theta_odometry[-1]) - 180)
         # if (angleDiff > 100):
         #     print("Theta: {0}; Theta Odometry: {1}".format(theta[-1], theta_odometry[-1]))
 
-        errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
+        # errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
 
         # send data to html page
-        # window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry,  particles.tolist())
+        window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry, x_pred, y_pred, particles.tolist())
 
 
         # move robot to a random position after a while
-        # if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
-        #     move_robot_to_random_position()
+        if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
+            move_robot_to_random_position()
 
         count += 1
 
-    print('saving error')
-    pickle.dump(errorPos, open("data_rf_500.pckl", "wb"))
+    # print('saving error')
+    # pickle.dump(errorPos, open("data_2000.pckl", "wb"))

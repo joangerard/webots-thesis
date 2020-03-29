@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 
-data30 = pickle.load(open("data/data_30.pckl", "rb"))
-data100 = pickle.load(open("data/data_100.pckl", "rb"))
-data500 = pickle.load(open("data/data_500.pckl", "rb"))
-data2000 = pickle.load(open("data/data_2000.pckl", "rb"))
-dataOdo = pickle.load(open("data/data_odo.pckl", "rb"))
+data30 = pickle.load(open("data30/data_30.pckl", "rb"))
+data100 = pickle.load(open("data30/data_100.pckl", "rb"))
+data500 = pickle.load(open("data30/data_500.pckl", "rb"))
+data2000 = pickle.load(open("data30/data_2000.pckl", "rb"))
+dataOdo = pickle.load(open("data30/data_odo.pckl", "rb"))
 
 # Reporting RMSD for the data captured using
 # self.sigma = 0.0055
