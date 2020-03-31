@@ -44,7 +44,7 @@ DEF e-puck Robot {
         }
       ]
       endPoint Solid {
-        translation -0.044999999999994 0.025 0
+        translation -0.04499999999995953 0.025 0
         rotation -1 0 0 0
         children [
           DEF WHEEL Transform {
@@ -87,7 +87,7 @@ DEF e-puck Robot {
         }
       ]
       endPoint Solid {
-        translation 0.044999998401025004 0.025003865829176117 4.3172739925959654e-18
+        translation 0.044999998400990476 0.025003865829176117 1.01081735551776e-16
         rotation -1 0 0 0
         children [
           USE WHEEL

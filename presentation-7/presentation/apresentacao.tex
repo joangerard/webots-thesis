@@ -1,0 +1,152 @@
+\documentclass{beamer}
+
+\mode<presentation>{
+\usetheme{Dresden}
+\setbeamercovered{transparent}
+\usecolortheme{lsc}
+}
+
+\mode<handout>{
+  % tema simples para ser impresso
+  \usepackage[bar]{beamerthemetree}
+  % Colocando um fundo cinza quando for gerar transparências para serem impressas
+  % mais de uma transparência por página
+  \beamertemplatesolidbackgroundcolor{black!5}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage[brazil]{varioref}
+\usepackage[english,brazil]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\newcommand\Fontvi{\fontsize{6}{10}\selectfont}
+
+\beamertemplatetransparentcovereddynamic
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\setbeamercolor{footline}{fg=black}
+\setbeamerfont{footline}{series=\bfseries}
+
+\title[Machine Learning for Probabilistic Robotics with Webots]{Machine Learning for Probabilistic Robotics with Webots}
+\author[Joan Gerard]{%
+  Joan Gerard\inst{1} \\
+  Promotor: Prof. Gianluca Bontempi \inst{1}}
+  \institute[ULB]{
+  \inst{1}%
+     Universit\'e Libre de Bruxelles}
+
+% Se comentar a linha abaixo, irá aparecer a data quando foi compilada a apresentação  
+\date{April 1th, 2020}
+
+\AtBeginSection[]{
+  \begin{frame}<beamer>
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{What is new?}
+\frame{
+	\frametitle{Collection of data}
+	\begin{itemize}
+		\item Running simulation for 30 minutes in fast mode: 1757372 collected samples.
+		\item Sensor noise decreased to 0.05 for each sensor.
+		\item Samples taken continuously at each robot time step.
+	\end{itemize}
+}
+
+\frame{
+	\frametitle{Neural Network Architecture}
+	
+	\begin{itemize}
+		\item Optimizer: rmsprop
+		\item Input: 3
+		\item Sequential: 16; relu.
+		\item Sequential: 32; relu.
+		\item Sequential: 64; relu.
+		\item Sequential: 16; relu.
+		\item Output: 1
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=3cm]{MAE}{figs/mae.png}
+\pgfdeclareimage[height=3cm]{LOSS}{figs/loss.png}
+
+\frame{
+	\frametitle{Model training}
+	\begin{itemize}
+		\item Avoid data normalization.
+		\item Retrain the 8 NN models using mini-batch mode instead of stochastic mode using batch size = 64 for 50 epochs.
+		\item Assess the model using k-fold for only one sensor: sensor 3.
+		\item The sensors in the front of the robot (1, 8) perform worst than the rest: loss: 0.0887 - mae: 0.0832
+		\item $NMSE = 0.023$
+	\end{itemize}
+	\centering
+	\pgfuseimage{MAE}
+	\pgfuseimage{LOSS}
+}
+
+
+\pgfdeclareimage[height=3cm]{EXPERIMENT}{figs/particles-distance-error.png}
+\pgfdeclareimage[height=3cm]{ARENA}{figs/arena.png}
+\section{Experiment}
+\frame {
+	\begin{itemize}
+		\item Resampling at $t$ mod $2 == 0$. Where $t$ is the robot time step.
+		\item Run the simulation with parameters: $\sigma_{xy} = 0.001$, $\sigma_{\theta} = 2$
+		\item Run the simulation for $t = 1000$ with $K = 30, 100, 500, 2000$ where $K$ is the number of particles.
+		\item Use \textbf{online learning}: refit the models at each time step for 50 epochs with new data: robot estimated state $\rightarrow$ sensor measurements. 
+	\end{itemize}
+	
+	\begin{columns}
+		\column{6cm}
+			\pgfuseimage{EXPERIMENT}
+			\pgfuseimage{ARENA}
+		\column{3cm}
+		\centering
+		{ \tiny
+			\textbf{RMSE (cm)}
+			\begin{itemize}
+				\item Odometry $15.53$
+				\item 30 particles w. refit 12.90
+				\item 30 particles $ 8.69$
+				\item 100 particles $ 6.73$
+				\item 500 particles $4.93$
+				\item 2000 particles $4.36$
+			\end{itemize}}
+	\end{columns}
+}
+
+
+\end{document}
+
+
+
+
+
+

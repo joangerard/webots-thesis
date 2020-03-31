@@ -272,8 +272,8 @@ if __name__ == '__main__':
     cont = True
 
     while(cont):
-        # if count == 1000:
-        #     cont = False
+        if count == 1000:
+            cont = False
 
         # print(count)
 
@@ -349,21 +349,17 @@ if __name__ == '__main__':
             y_pred.append(y_prim)
             theta_pred.append(theta_prim)
 
+            # predictor.refit_models(x[-1], y[-1], theta[-1], distance_sensors_info[-1])
+
             # print('x: {0}, y: {1}, theta: {2} | real_x: {3}, real_y: {4}, real_theta: {5} | weight: {6}'
             #       .format(x_pred[-1], y_pred[-1], theta_pred[-1], x[-1], y[-1], theta[-1], weighted_sum))
 
-            # errorPos.append(np.sqrt((x[-1] - x_pred[-1]) ** 2 + (y[-1] - y_pred[-1]) ** 2))
-
-
-        # angleDiff = 180 - abs(abs(theta[-1] - theta_odometry[-1]) - 180)
-        # if (angleDiff > 100):
-        #     print("Theta: {0}; Theta Odometry: {1}".format(theta[-1], theta_odometry[-1]))
+            errorPos.append(np.sqrt((x[-1] - x_pred[-1]) ** 2 + (y[-1] - y_pred[-1]) ** 2))
 
         # errorPos.append(np.sqrt((x[-1] - x_odometry[-1]) ** 2 + (y[-1] - y_odometry[-1]) ** 2))
 
         # send data to html page
         window_communicator.sendCoordinatesParticles(x, y, x_odometry, y_odometry, x_pred, y_pred, particles.tolist())
-
 
         # move robot to a random position after a while
         if CAPTURING_DATA and count % MOVING_ROBOT_STEPS == 0:
@@ -371,5 +367,5 @@ if __name__ == '__main__':
 
         count += 1
 
-    # print('saving error')
-    # pickle.dump(errorPos, open("data_2000.pckl", "wb"))
+    print('saving error')
+    pickle.dump(errorPos, open("data_30_refit.pckl", "wb"))

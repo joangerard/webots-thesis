@@ -13,7 +13,7 @@ class PredictorNNSensorsNotNormalized:
 
         self.models = []
         for i in range(1, 9):
-            self.models.append(load_model('models/nn/nn_sensor_{0}.h5'.format(i)))
+            self.models.append(load_model('models/nn/nn_sensor_{0}.h5'.format(i)))pyt
 
     def prediction_error(self, x, y, theta, sensors):
 
@@ -31,3 +31,7 @@ class PredictorNNSensorsNotNormalized:
                 err += np.absolute(elem - sensors[ix]) ** 3
 
         return 1/err, bad_data
+
+    def refit_models(self, x, y, theta, sensors):
+        for i in range(1, 9):
+            self.models[i-1].fit(np.array([[x, y, theta]]), np.array([sensors[i - 1]]), epochs=50, verbose=0)
