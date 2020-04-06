@@ -1,13 +1,5 @@
 \section{Background and objectives of the thesis}
 
-Webots is a robot simulation tool created by the Swiss Federal Institute of Technology in Lausanne (EPFL) in December 1996. It is used since then in industry and academia for researching purposes. It became open source in December 2018 under the Apache 2.0 license \cite{cyberbotics}.  This tool has more than 40 models of robots; moreover, it allows users to create new custom models.
-
-
-Webots was used for different research projects using machine-learning techniques. Szab\'{o}\cite{szabo}, for instance, created a module for metric navigation using a modification of the Khepera robot. The objective was to build a map of a few-square-meter size environment with some obstacles on it. Szab\'{o} used these steps to build his module: sensor interpretation, integration over time, pose estimation, global grid build and exploration (See \cite{thrun-1}).
-
-The robot pose over the space environment is uncertain and it becomes difficult to estimate as a result of non-systematic errors. Even though it can be approximated using odometry techniques as it is shown in Szab\'{o} work, as times goes the estimated position is phased out due to the error accumulation until it becomes useless. The use of parametric and non-parametric filters can be useful to reduce this error. Thus, the long-term objective of the master thesis will be to exploit the simulation benefits of Webots to introduce Machine Learning techniques together with non-parametric filters for robot positioning estimation, independently from the kind of robot used for in-door environments. The selected programming language is Python 3.7 in a MacOS environment.
-
-The purpose of this work is to present the state of the art, to show an introduction to Webots tool and non-parametric filters. 
 \section{Notations}
 \begin{flushleft}
 \begin{tabular}{l l}
@@ -57,6 +49,11 @@ GPU & Grafical Processing Unit\\
 GPGPU & General Purpose Graphical Processing Unit\\
 MCL & Monte Carlo localization\\
 SLAM & Simultaneous Localization And Mapping Problem\\
+DP & Differentiable Programming\\
+DPFs & Differentiable Particle Filters\\
+PF-net & Particle Filter Network\\
+HF & Histogram Filter\\
+
 \end{tabular}
 \end{flushleft}
 

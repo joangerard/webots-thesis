@@ -112,24 +112,67 @@
 }
 
 
-\pgfdeclareimage[height=3cm]{EXPERIMENT}{figs/particles-distance-error.png}
-\pgfdeclareimage[height=3cm]{ARENA}{figs/arena.png}
+
 \section{Experiment}
 \frame {
+	\frametitle{Experiment}
 	\begin{itemize}
 		\item Resampling at $t$ mod $2 == 0$. Where $t$ is the robot time step.
 		\item Run the simulation with parameters: $\sigma_{xy} = 0.001$, $\sigma_{\theta} = 2$
 		\item Run the simulation for $t = 1000$ with $K = 30, 100, 500, 2000$ where $K$ is the number of particles.
 		\item Use \textbf{online learning}: refit the models at each time step for 50 epochs with new data: robot estimated state $\rightarrow$ sensor measurements. 
 	\end{itemize}
+}
+
+\section{Results}
+\pgfdeclareimage[height=4cm]{EXPERIMENT}{figs/particles-distance-error.png}
+\pgfdeclareimage[height=4cm]{ARENA}{figs/arena.png}
+
+\frame{
+
+	The following graph shows the cumulative error during the 1000 epochs for different number of particles.
 	
-	\begin{columns}
-		\column{6cm}
-			\pgfuseimage{EXPERIMENT}
-			\pgfuseimage{ARENA}
-		\column{3cm}
-		\centering
-		{ \tiny
+	The cumulative error at time step $t$ is defined by:
+	\begin{equation}
+		CE_{t} = \sum_{i = 0}^{i = t} \sqrt{(\hat{s_i} - s_i)^2} 
+	\end{equation}
+	Where $\hat{s_i}$ is the estimated robot state $(\hat{x}, \hat{y})$ and $s_i$ is the true robot state $(x, y)$.
+	
+	\centering
+	\pgfuseimage{EXPERIMENT}
+}
+
+\frame {
+
+	\begin{itemize}
+		\item The brown line (Odometry) shows the cumulative error when odometry data only is used (no particles).
+		\item We can see that the more particles we use, the less the cumulative error is after 1000 time steps. 
+		\item It means that the particles filter algorithm works better than using odometry data only.
+		\item The more particles we use, the closer to the real robot state we are.
+		\item The orange line (30 refit) indicates the cumulative error using 30 particles and at each time step the 
+		model is being refitted with the new data received $(\hat{x}, \hat{y}, \hat{\theta}) \rightarrow sensor\_measurements[1,2, ..., 8]$
+		which is called online learning.
+		\item The \textit{30 refit} model performs better than odometry alone after 1000 time steps but worst than using 30 particles only (blue line).
+	\end{itemize}
+}
+
+\frame{
+	This is the top-view graph of a random walk of a robot in the 1.5x2m arena.
+	
+	The graph is the result of running the simulation with 200 particles compared with the odometry data alone (green line) and the true robot state (blue line). 
+	We can see how the odometry data quickly diverges from the true robot state while the particles filter estimation remains closer to it along the path made by the robot.
+	
+	
+	\centering
+	\pgfuseimage{ARENA}
+}
+
+\frame {
+
+	The RMSE data of the experiment shows that the particles filter gave in all the cases better results than using odometry data alone. Using 2000 particles shows that the estimation was closer to the real robot state (4.36 cm of error Vs. 15.53 cm of error using odometry alone).
+	
+	\centering
+		{ \small
 			\textbf{RMSE (cm)}
 			\begin{itemize}
 				\item Odometry $15.53$
@@ -139,9 +182,7 @@
 				\item 500 particles $4.93$
 				\item 2000 particles $4.36$
 			\end{itemize}}
-	\end{columns}
 }
-
 
 \end{document}
 
