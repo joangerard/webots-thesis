@@ -14,7 +14,7 @@ class ParticlesFilter:
         self.sigma_theta = 2
         self.environment_config = environment_config
         self.robot_previous_config = robot_initial_config
-        self.number_of_particles = 30
+        self.number_of_particles = 2000
         self.predictor = predictor
         self.alpha = 0.7
         self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
@@ -30,19 +30,17 @@ class ParticlesFilter:
 
         self._apply_movement_to(self.particles, delta_movement)
 
+        particle_transpose = self.particles[0:3].transpose()
+
         # calculate weights
-        for particle in self.particles.transpose():
-            particle[3], bad_data = self.predictor.prediction_error(particle[0], particle[1], particle[2], sensors)
+        self.particles[3], bad_data = self.predictor.prediction_error(particle_transpose, sensors)
 
         self.normalize_weights()
 
         # resampling based on weights
         if resampling:
-            # self.particles[3] = self.particles[3]/(self.alpha * self.particles[3] + (1-self.alpha)*1/self.number_of_particles)
-            # normalize weights
             indexes = np.random.choice(range(0, self.number_of_particles), self.number_of_particles, p=self.particles[3], replace=True)
-            self.particles = self.particles.transpose()[indexes].transpose()
-            self.normalize_weights()
+            self.particles[0:3] = particle_transpose[indexes].transpose()
 
         return self.particles
 
