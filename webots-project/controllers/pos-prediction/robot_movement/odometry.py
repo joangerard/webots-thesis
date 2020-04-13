@@ -1,5 +1,5 @@
-from wheels_state import WheelsState
-from coordinate import Coordinate
+from robot_movement.wheels_state import WheelsState
+from robot_movement.coordinate import Coordinate
 import numpy as np
 
 

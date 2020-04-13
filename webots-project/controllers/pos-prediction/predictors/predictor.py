@@ -1,9 +1,6 @@
-import pandas as pd
-from data_collector import DataCollector
+from data_collector.data_collector import DataCollector
 from sklearn.ensemble import RandomForestRegressor
 import math
-import pickle
-import os.path
 
 
 class Predictor:

@@ -1,4 +1,3 @@
-from data_collector import DataCollector
 import math
 from creme import linear_model
 from creme.preprocessing import StandardScaler
@@ -6,9 +5,7 @@ from creme.compose import Pipeline
 from creme import ensemble
 from creme import optim
 from creme import metrics
-from creme import model_selection
-import numpy as np
-import pprint
+
 
 class PredictorOnline:
     def __init__(self, data_collector):
