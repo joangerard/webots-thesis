@@ -36,6 +36,16 @@ class WindowCommunicator:
             }
         ))
 
+    def sendInitialParams(self, params):
+        self.robot.wwiSendText(json.dumps(
+            {
+                'code': 'init',
+                'num_particles': params.PARTICLES_NUMBER,
+                'sigma_xy': params.SIGMA_XY,
+                'sigma_theta': params.SIGMA_THETA
+            }
+        ))
+
     def receiveMessage(self):
         text = self.robot.wwiReceiveText()
 

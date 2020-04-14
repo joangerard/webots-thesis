@@ -22,6 +22,18 @@ class ParticlesFilter:
         # theta = np.random.uniform(0, 360, self.number_of_particles)
         self.particles = np.array([x, y, theta, self.weights])
 
+    def reset_particles(self, number_particles, sigma_xy, sigma_theta, position):
+        self.number_of_particles = int(number_particles)
+        self.sigma_xy = float(sigma_xy)
+        self.sigma_theta = float(sigma_theta)
+        self.weights = [1/self.number_of_particles for i in range(self.number_of_particles)]
+
+        x = np.random.normal(position.x, self.sigma_xy, self.number_of_particles)
+        y = np.random.normal(position.y, self.sigma_xy, self.number_of_particles)
+        theta = np.random.normal(position.theta, self.sigma_theta, self.number_of_particles)
+
+        self.particles = np.array([x, y, theta, self.weights])
+
     def get_particles(self, delta_movement, sensors, resampling=True):
 
         self._apply_movement_to(self.particles, delta_movement)

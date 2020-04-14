@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 import pickle
+import json
 
 
 class RobotManager:
@@ -175,6 +176,7 @@ class RobotManager:
         self.init_robot_pos(self.params.INIT_X, self.params.INIT_Y)
         self.step()
         self.init_robot_pos(self.params.INIT_X, self.params.INIT_Y)
+        self.window_communicator.sendInitialParams(self.params)
 
         odometry = Odometry(self.params.ENCODER_UNIT * (self.positionLeft.getValue()),
                             self.params.ENCODER_UNIT * (self.positionRight.getValue()), self.params.INIT_X, self.params.INIT_Y, self.params.INIT_ANGLE)
@@ -198,10 +200,19 @@ class RobotManager:
 
             # receive message from robot window
             message = self.window_communicator.receiveMessage()
-            if message == 'start_randomness':
+            message = json.loads(message) if message else None
+
+            if message and message['code'] == 'start_randomness':
                 self.movement_random = True
-            elif message == 'stop_randomness':
+            elif message and message['code'] == 'stop_randomness':
                 self.movement_random = False
+            elif message and message['code'] == 'params_modification':
+                self.particles_filter.reset_particles(message["number_particles"],
+                                                      message["sigma_xy"],
+                                                      message["sigma_theta"],
+                                                      RobotConfiguration(self.x_pred[-1],
+                                                                         self.y_pred[-1],
+                                                                         self.theta_pred[-1]))
 
             # get odometry data
             odometry_info, delta_movement = odometry.track_step(self.params.ENCODER_UNIT * (self.positionLeft.getValue()),
@@ -234,8 +245,8 @@ class RobotManager:
                 last_move = 'none'
             else:
                 # joystick control
-                if last_move == 'none' or (message and last_move != message):
-                    last_move = message
+                if message and message['code'] == "move" and last_move != message['direction']:
+                    last_move = message['direction']
                 if last_move == 'UP':
                     left_speed, right_speed = self.movement_controller.move_straight()
                 elif last_move == 'DOWN':

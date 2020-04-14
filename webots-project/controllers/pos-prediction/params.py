@@ -5,7 +5,7 @@ class Params:
     def __init__(self,
                  init_x=1,
                  init_y=.75,
-                 experiment_duration_steps=1000,
+                 experiment_duration_steps=2000,
                  particles_number=200,
                  sigma_xy=0.001,
                  sigma_theta=2,
