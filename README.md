@@ -79,11 +79,11 @@ You are a user who wants to have the application running and you are not interes
 
 6. In Webots open the preferences window under the `Webots/Preferences...` option and configure the Python command to be the python executable which is in the recently created virtual environment in the path: `webots-project/controllers/pos-prediction/env/bin/python3`
 
-![Preferences](https://github.com/joangerard/webots-thesis/img/preferences.png "Preferences Configuration Webots")
+![Preferences](https://github.com/joangerard/webots-thesis/blob/master/img/preferences.png "Preferences Configuration Webots")
 
 7. Open the Robot Window: click on the robot then right click on it and select the option Show Window Robot. The robot window will be displayed in the left side of the screen.
 
-![Show Robot Window](https://github.com/joangerard/webots-thesis/img/robot-window.png "Show Robot Window")
+![Show Robot Window](https://github.com/joangerard/webots-thesis/blob/master/img/robot-window.png "Show Robot Window")
 
 
 
