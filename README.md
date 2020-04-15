@@ -8,6 +8,8 @@ This project is about robot positioning estimation using:
 * A little bit of Javascript, HTML and bootstrap
 * Particles Filter
 
+![Application](https://github.com/joangerard/webots-thesis/blob/master/img/particles.gif "Application")
+
 The following folders can be found in this project: 
 
 * documents: it has the presentations made during the development process together with the project documentation under the `documennts/thesis-doc/main.pdf` file.
@@ -24,52 +26,65 @@ You are a user who wants to have the application running and you are not interes
 2. Download Python 3.7 from [here](https://www.python.org/downloads/release/python-377/) and install it if you do not have done it already. DO NOT USE `brew` command to install Python because you may have several premission problems while running it from Webots.
 3. Clone this repository into your local machine typing `git clone https://github.com/joangerard/webots-thesis` in a terminal.
 4. Install the Python library dependencies.
-  * It is highly recomended to install a virtual environment in python to isolate the libraries installation.
+  It is highly recomended to install a virtual environment in python to isolate the libraries installation.
     
-    In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
+  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
 
     For MacOs and Linux:
-    ```python3 -m pip install --user virtualenv```
+
+      ```
+      python3 -m pip install --user virtualenv
+      ```
 
     For Windows:
-    ```py -m pip install --user virtualenv```
+      ```
+      py -m pip install --user virtualenv
+      ```
 
-    Then create a new environment using the command:
+  Then create a new environment using the command:
 
     For MacOs and Linux:
-    ```python3 -m venv env```
+      ```
+      python3 -m venv env
+      ```
 
     For Windows:
-    ```py -m venv env```
+      ```
+      py -m venv env
+      ```
 
-    venv will create a virtual Python installation in the `env` folder.
+  venv will create a virtual Python installation in the `env` folder.
 
-    Activate the environment:
+  Activate the environment:
 
     For MacOs and Linux:
-    ```source env/bin/activate```
+      ```
+      source env/bin/activate
+      ```
 
     For Windows:
-    ```.\env\Scripts\activate```
+      ```
+      .\env\Scripts\activate
+      ```
 
-    Confirm that your environment was correctly installed and it is active with the command:
+  Confirm that your environment was correctly installed and it is active with the command:
 
     For MacOS and Linux:
-    ```
-    which python
-    .../env/bin/python
-    ```
+      ```
+      which python
+      .../env/bin/python
+      ```
 
     For Windows:
-    ```
-    where python
-    .../env/bin/python.exe
-    ```
+      ```
+      where python
+      .../env/bin/python.exe
+      ```
 
-  * Now that you have your venvironment up and it is activated install all the project dependencies on it.
+  Now that you have your venvironment up and it is activated install all the project dependencies on it.
 
-    Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.
-    This command will install all the project dependencies which are in the `requirements.txt` file.
+  Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.
+  This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5. Go to the folder `webots-project/worlds` you will see two worlds:
   * `pos-prediction-user.wbt`: This world has configured to run the robot controller inside the Webots tool.
@@ -85,5 +100,121 @@ You are a user who wants to have the application running and you are not interes
 
 ![Show Robot Window](https://github.com/joangerard/webots-thesis/blob/master/img/robot-window.png "Show Robot Window")
 
+## Developer Guidelines
 
+This section is dedicated to the people who want to extend this plugin, reuse it or simply want to see how the code works.
+
+IntelliJ Ultimate 2018.2 is used as IDE tool but any other IDE should be similarly configurable.
+
+The robot controller code was programmed using Python 3.7 and it is under the directory `webots-project/controllers/pos-prediction`. 
+
+The robot window plugin was programmed using JavaScript 6 and it is under the directory `/webots-project/plugins/robot_windows/pos-prediction`. 
+
+### Installation
+
+1. Follow steps 1 to 4 from the User Guidelines section.
+2. Configure the following environment variables in MacOs using the `export` command
+
+| Env Variable        | Typical Value                                 |
+| ------------------- |:---------------------------------------------:|
+| WEBOTS_HOME         | /Applications/Webots.app                      |
+| DYLD_LIBRARY_PATH   | add ${WEBOTS_HOME}/lib/controller             |
+| PYTHONPATH          | add ${WEBOTS_HOME}/lib/controller/python3X    |
+
+For instance you could add these lines to the `~/.bash_profile`:
+
+```
+export WEBOTS_HOME="/Applications/Webots.app"
+export DYLD_LIBRARY_PATH="${WEBOTS_HOME}/lib/controller:$DYLD_LIBRARY_PATH"
+export PYTHONPATH="${WEBOTS_HOME}/lib/controller/python37:$PYTHONPATH"
+export PYTHONIOENCODING="UTF-8"
+```
+
+And execute the `source ~/.bash_profile` command and that is it!
+
+For other operative systems please refer to [this](https://cyberbotics.com/doc/guide/running-extern-robot-controllers?tab-os=macos&tab-language=python) link. 
+
+2. Configure IntelliJ to lunch the robot controller.
+   
+  Open the `webots-project/controllers/pos-prediction` project on IntelliJ.
+
+  Click on `File/Project Structure...`, click on the `Add Content Root`, and select the Python version of Webots. In MacOs this can be found here: `Applications/Webots.app/lib/controller/python37`.
+
+  ![Add Content Root](https://github.com/joangerard/webots-thesis/blob/master/img/add-content-root.png "Add Content Root")
+
+  Click on `Run/Run.../Edit Configurations...`, in the environment variables add:
+
+  ```
+  PYTHONUNBUFFERED=1;
+  DYLD_LIBRARY_PATH=/Applications/Webots.app/lib/controller
+  ```
+
+  ![Running Configurations](https://github.com/joangerard/webots-thesis/blob/master/img/run-main.png "Running Configurations")
+
+  N.B. Make sure you selected the interpreter that is associated with your virtual environment. In the picture below, the virtual environment is called `pos-prediction` and it was created with the IDE selecting the option `File/Project Structure.../SDKs` and click on `+` sign to add another one. This is equivalent to the venv command previously used. It has the same purpose of isolating the installed libraries.
+
+
+3. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right clic is usually enough) and click on the play button. This will do nothing but wait an external controller to run.
+4. Run the `pos-prediction.py` file on IntelliJ. You can simply press the `Run` button or right click on the file name and press `Run`.
+5. You will see the simulation starts to run on Webots if everything was success.
+
+### Comand Line Arguments
+
+The parameters field in the Running Configuration Window (Last image of step 2 in this section) it is possible to specify some arguments to pass to the controller before it runs like the initial robot possition or the amount of particles, etc.
+
+The list of arguments are listed below:
+
+```
+usage: pos-prediction.py [-h] [--initx INITX] [--inity INITY]
+                         [--experiment_duration_steps EXPERIMENT_DURATION_STEPS]
+                         [-pn PARTICLES_NUMBER] [--sigma_xy SIGMA_XY]
+                         [--sigma_theta SIGMA_THETA] [--calculate_pred_error]
+                         [--calculate_odo_error]
+                         [--pred_error_file PRED_ERROR_FILE]
+                         [--pred_odo_file PRED_ODO_FILE] [--go_straight]
+                         [--capture_data]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --initx INITX         Initial X position of robot
+  --inity INITY         Initial Y position of robot
+  --experiment_duration_steps EXPERIMENT_DURATION_STEPS
+                        Max number of duration steps
+  -pn PARTICLES_NUMBER, --particles_number PARTICLES_NUMBER
+                        Number of particles
+  --sigma_xy SIGMA_XY   Sigma XY that controls the SDE of the x,y coordinates
+  --sigma_theta SIGMA_THETA
+                        Sigma Theta that controls the SDE of the robot angle
+  --calculate_pred_error
+                        Store the prediction error in form of .pkl file
+  --calculate_odo_error
+                        Store the odometry error in form of .pkl file
+  --pred_error_file PRED_ERROR_FILE
+                        Name of the file where to save the prediction error
+  --pred_odo_file PRED_ODO_FILE
+                        Name of the file where to save the odometry error
+  --go_straight         Let the robot go straight
+  --capture_data        Capture data mode on
+```
+
+
+This command tells the robot to start in position (0.5, 0.5) on the arena.
+
+```
+pos-prediction.py --initx 0.5 --inity 0.5
+```
+
+This command tells the robot to use 1000 particles with an standar deviation of 0.01 metters in the coordinates and 20 degrees in the angle.
+
+```
+pos-prediction.py --particles_number 1000 --sigma_xy 0.01 --sigma_theta 20
+```
+
+This command captures the prediction error at each time step and it saves it into a .pkl file. Then the array of values can be loaded from the file into a variable using the Pickle Python Library. Each position of the array contains the value of sqrt((x_pred - x_true)^2 + (y_pred - x_true)^2)
+
+```
+pos-prediction.py --calculate_pred_error --pred_error_file "data_30_partices_001_Sigma.pkl"
+```
+
+This was used for obtaining comparable results of the experiments.
 
