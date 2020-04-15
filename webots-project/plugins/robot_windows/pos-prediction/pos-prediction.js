@@ -18,7 +18,7 @@ function loadChartParticles(items) {
         name: 'Particles',
         mode: 'markers',
         marker: {
-            size: 6
+            size: 3
         }
     }
     
@@ -26,10 +26,10 @@ function loadChartParticles(items) {
         x: items.x_pred,
         y: items.y_pred,
         name: 'Particles Prediction',
-         mode: 'lines',
-          line: {
-            width: 1.5
-          }
+         mode: 'markers',
+         marker: {
+            size: 4
+        }
     }
     
      let xy_odometry = {
