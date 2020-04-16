@@ -29,65 +29,45 @@ You are a user who wants to have the application running and you are not interes
 2. Download Python 3.7 from [here](https://www.python.org/downloads/release/python-377/) and install it if you do not have done it already. DO NOT USE `brew` command to install Python because you may have several premission problems while running it from Webots.
 3. Clone this repository into your local machine typing `git clone https://github.com/joangerard/webots-thesis` in a terminal.
 4. Install the Python library dependencies.
-  It is highly recomended to install a virtual environment in python to isolate the libraries installation.
+  4. It is highly recomended to install a virtual environment in python to isolate the libraries installation.
     
-  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
+  4. In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
 
-  For MacOs and Linux:
+    // For MacOs and Linux:
+    python3 -m pip install --user virtualenv
 
-  ```
-  python3 -m pip install --user virtualenv
-  ```
+    // For Windows:
+    py -m pip install --user virtualenv
 
-  For Windows:
-  ```
-  py -m pip install --user virtualenv
-  ```
+  4. Create a new environment using the command:
 
-  Then create a new environment using the command:
+    //For MacOs and Linux:
+    python3 -m venv env
 
-  For MacOs and Linux:
-  ```
-  python3 -m venv env
-  ```
+    //For Windows:
+    py -m venv env
 
-  For Windows:
-  ```
-  py -m venv env
-  ```
+  4. Activate the environment: venv will create a virtual Python installation in the `env` folder.
 
-  venv will create a virtual Python installation in the `env` folder.
+    //For MacOs and Linux:
+    source env/bin/activate
 
-  Activate the environment:
+    //For Windows:
+    .\env\Scripts\activate
 
-  For MacOs and Linux:
-  ```
-  source env/bin/activate
-  ```
+  4. Confirm that your environment was correctly installed and it is active with the command:
 
-  For Windows:
-  ```
-  .\env\Scripts\activate
-  ```
+    // For MacOS and Linux:
+    which python
 
-  Confirm that your environment was correctly installed and it is active with the command:
+    .../env/bin/python
 
-  For MacOS and Linux:
-  ```
-  which python
-  .../env/bin/python
-  ```
+    // For Windows:
+    where python
+    
+    .../env/bin/python.exe
 
-  For Windows:
-  ```
-  where python
-  .../env/bin/python.exe
-  ```
-
-  Now that you have your venvironment up and it is activated install all the project dependencies on it.
-
-  Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.
-  This command will install all the project dependencies which are in the `requirements.txt` file.
+  4. Now that you have your venvironment up and it is activated install all the project dependencies on it. Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`. This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5. Go to the folder `webots-project/worlds` you will see two worlds:
   * `pos-prediction-user.wbt`: This world has configured to run the robot controller inside the Webots tool.
@@ -137,7 +117,7 @@ And execute the `source ~/.bash_profile` command and that is it!
 
 For other operative systems please refer to [this](https://cyberbotics.com/doc/guide/running-extern-robot-controllers?tab-os=macos&tab-language=python) link. 
 
-2. Configure IntelliJ to lunch the robot controller.
+3. Configure IntelliJ to lunch the robot controller.
    
   Open the `webots-project/controllers/pos-prediction` project on IntelliJ.
 
@@ -157,9 +137,9 @@ For other operative systems please refer to [this](https://cyberbotics.com/doc/g
   N.B. Make sure you selected the interpreter that is associated with your virtual environment. In the picture below, the virtual environment is called `pos-prediction` and it was created with the IDE selecting the option `File/Project Structure.../SDKs` and click on `+` sign to add another one. This is equivalent to the venv command previously used. It has the same purpose of isolating the installed libraries.
 
 
-3. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right clic is usually enough) and click on the play button. This will do nothing but wait an external controller to run.
-4. Run the `pos-prediction.py` file on IntelliJ. You can simply press the `Run` button or right click on the file name and press `Run`.
-5. You will see the simulation starts to run on Webots if everything was success.
+4. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right clic is usually enough) and click on the play button. This will do nothing but wait an external controller to run.
+5. Run the `pos-prediction.py` file on IntelliJ. You can simply press the `Run` button or right click on the file name and press `Run`.
+6. You will see the simulation starts to run on Webots if everything was success.
 
 ### Comand Line Arguments
 
