@@ -29,7 +29,9 @@ You are a user who wants to have the application running and you are not interes
 2. Download Python 3.7 from [here](https://www.python.org/downloads/release/python-377/) and install it if you do not have done it already. DO NOT USE `brew` command to install Python because you may have several premission problems while running it from Webots.
 3. Clone this repository into your local machine typing `git clone https://github.com/joangerard/webots-thesis` in a terminal.
 4. Install the Python library dependencies.
+
   4.1. It is highly recomended to install a virtual environment in python to isolate the libraries installation.
+
   4.2. In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
 
     // For MacOs and Linux:
@@ -37,6 +39,7 @@ You are a user who wants to have the application running and you are not interes
 
     // For Windows:
     py -m pip install --user virtualenv
+
   4.3. Create a new environment using the command:
 
     //For MacOs and Linux:
@@ -44,6 +47,7 @@ You are a user who wants to have the application running and you are not interes
 
     //For Windows:
     py -m venv env
+
   4.4. Activate the environment: venv will create a virtual Python installation in the `env` folder.
 
     //For MacOs and Linux:
@@ -51,6 +55,7 @@ You are a user who wants to have the application running and you are not interes
 
     //For Windows:
     .\env\Scripts\activate
+
   4.5. Confirm that your environment was correctly installed and it is active with the command:
 
     // For MacOS and Linux:
@@ -62,6 +67,7 @@ You are a user who wants to have the application running and you are not interes
     where python
     
     .../env/bin/python.exe
+
   4.6. Now that you have your venvironment up and it is activated install all the project dependencies on it. Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`. This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5. Go to the folder `webots-project/worlds` you will see two worlds:
@@ -113,9 +119,12 @@ And execute the `source ~/.bash_profile` command and that is it!
 For other operative systems please refer to [this](https://cyberbotics.com/doc/guide/running-extern-robot-controllers?tab-os=macos&tab-language=python) link. 
 
 3. Configure IntelliJ to lunch the robot controller.
+
   3.1. Open the `webots-project/controllers/pos-prediction` project on IntelliJ.
+
   3.2. Click on `File/Project Structure...`, click on the `Add Content Root`, and select the Python version of Webots. In MacOs this can be found here: `Applications/Webots.app/lib/controller/python37`.
   ![Add Content Root](https://github.com/joangerard/webots-thesis/blob/master/img/add-content-root.png "Add Content Root")
+  
   3.3. Click on `Run/Run.../Edit Configurations...`, in the environment variables add:
 
   ```
