@@ -34,37 +34,31 @@ You are a user who wants to have the application running and you are not interes
 
     4.2.  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
 
-          ```
           // For MacOs and Linux:
           python3 -m pip install --user virtualenv
 
           // For Windows:
           py -m pip install --user virtualenv
-          ```
 
     4.3.  Create a new environment using the command:
 
-          ```
           //For MacOs and Linux:
           python3 -m venv env
 
           //For Windows:
           py -m venv env
-          ```
+          
 
     4.4.  Activate the environment: venv will create a virtual Python installation in the `env` folder.
 
-          ```
           //For MacOs and Linux:
           source env/bin/activate
 
           //For Windows:
           .\env\Scripts\activate
-          ```
 
     4.5.  Confirm that your environment was correctly installed and it is active with the command:
 
-          ```
           // For MacOS and Linux:
           which python
 
@@ -74,10 +68,9 @@ You are a user who wants to have the application running and you are not interes
           where python
           
           .../env/bin/python.exe
-          ```
 
-    4.6.  Now that you have your venvironment up and it is activated install all the project dependencies on it. \\
-          Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.\\
+    4.6.  Now that you have your venvironment up and it is activated install all the project dependencies on it.  
+          Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.  
           This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5.  Go to the folder `webots-project/worlds` you will see two worlds:
