@@ -198,7 +198,7 @@ This command tells the robot to use 1000 particles with an standar deviation of 
 pos-prediction.py --particles_number 1000 --sigma_xy 0.01 --sigma_theta 20
 ```
 
-This command captures the prediction error at each time step and it saves it into a .pkl file. Then the array of values can be loaded from the file into a variable using the Pickle Python Library. Each position of the array contains the value of sqrt((x_pred - x_true)^2 + (y_pred - x_true)^2)
+This command captures the prediction error at each time step and it saves it into a .pkl file. Then the array of values can be loaded from the file into a variable using the Pickle Python Library. Each position of the array contains the value of sqrt((x_pred - x_true)^2 + (y_pred - y_true)^2)
 
 ```
 pos-prediction.py --calculate_pred_error --pred_error_file "data_30_partices_001_Sigma.pkl"
