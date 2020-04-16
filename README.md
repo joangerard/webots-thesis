@@ -21,7 +21,7 @@ The following folders can be found in this project:
 
 This README is oriented to guide the user or the developer through the installation process. 
 
-## User Guidelines
+## User Installation Guidelines
 
 You are a user who wants to have the application running and you are not interested in the code so this section is just for you.
 
@@ -87,7 +87,7 @@ You are a user who wants to have the application running and you are not interes
 
     ![Show Robot Window](https://github.com/joangerard/webots-thesis/blob/master/img/robot-window.png "Show Robot Window")
 
-## Developer Guidelines
+## Developer Installation Guidelines
 
 This section is dedicated to the people who want to extend this plugin, reuse it or simply want to see how the code works.
 
@@ -133,14 +133,13 @@ The robot window plugin was programmed using JavaScript 6 and it is under the di
           ```
           PYTHONUNBUFFERED=1;
           DYLD_LIBRARY_PATH=/Applications/Webots.app/lib/controller
-          ```
+          ```  
+      ![Running Configurations](https://github.com/joangerard/webots-thesis/blob/master/img/run-main.png "Running Configurations")    
 
-          ![Running Configurations](https://github.com/joangerard/webots-thesis/blob/master/img/run-main.png "Running Configurations")
-
-          N.B. Make sure you selected the interpreter that is associated with your virtual environment. In the picture below, the virtual environment is called `pos-prediction` and it was created with the IDE selecting the option `File/Project Structure.../SDKs` and click on `+` sign to add another one. This is equivalent to the venv command previously used. It has the same purpose of isolating the installed libraries.
+      *N.B.* Make sure you selected the interpreter that is associated with your virtual environment. In the picture below, the virtual environment is called `pos-prediction` and it was created with the IDE selecting the option `File/Project Structure.../SDKs` and click on `+` sign to add another one. This is equivalent to the venv command previously used. It has the same purpose of isolating the installed libraries.
 
 
-4. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right clic is usually enough) and click on the play button. This will do nothing but wait an external controller to run.
+4. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right click is usually enough) and click on the play button. This will do nothing but wait an external controller to run the simulation.
 
 5. Run the `pos-prediction.py` file on IntelliJ. You can simply press the `Run` button or right click on the file name and press `Run`.
 
