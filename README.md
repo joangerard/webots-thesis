@@ -33,6 +33,7 @@ You are a user who wants to have the application running and you are not interes
     4.1. It is highly recomended to install a virtual environment in python to isolate the libraries installation.
 
     4.2.  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
+
           ```
           // For MacOs and Linux:
           python3 -m pip install --user virtualenv
@@ -42,6 +43,7 @@ You are a user who wants to have the application running and you are not interes
           ```
 
     4.3.  Create a new environment using the command:
+
           ```
           //For MacOs and Linux:
           python3 -m venv env
@@ -51,6 +53,7 @@ You are a user who wants to have the application running and you are not interes
           ```
 
     4.4.  Activate the environment: venv will create a virtual Python installation in the `env` folder.
+
           ```
           //For MacOs and Linux:
           source env/bin/activate
@@ -60,6 +63,7 @@ You are a user who wants to have the application running and you are not interes
           ```
 
     4.5.  Confirm that your environment was correctly installed and it is active with the command:
+
           ```
           // For MacOS and Linux:
           which python
@@ -72,9 +76,8 @@ You are a user who wants to have the application running and you are not interes
           .../env/bin/python.exe
           ```
 
-    4.6.  Now that you have your venvironment up and it is activated install all the project dependencies on it. 
-          Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`. 
-          
+    4.6.  Now that you have your venvironment up and it is activated install all the project dependencies on it. \\
+          Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.\\
           This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5.  Go to the folder `webots-project/worlds` you will see two worlds:
@@ -152,7 +155,7 @@ The robot window plugin was programmed using JavaScript 6 and it is under the di
 
 ### Comand Line Arguments
 
-The parameters field in the Running Configuration Window (Last image of step 2 in this section) it is possible to specify some arguments to pass to the controller before it runs like the initial robot possition or the amount of particles, etc.
+It is possible to specify some arguments to pass to the controller before it runs like the initial robot possition or the amount of particles, etc. In order to do so IntelliJ will be used to pass arguments each time we run the controller. This can be done through the Parameters field in the Running Configuration Window (Last image of step 2 in this section).
 
 The list of arguments are listed below:
 
@@ -189,6 +192,7 @@ optional arguments:
   --capture_data        Capture data mode on
 ```
 
+#### Examples of Arguments
 
 This command tells the robot to start in position (0.5, 0.5) on the arena.
 
