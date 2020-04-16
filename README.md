@@ -15,9 +15,9 @@ This project is about robot positioning estimation using:
 
 The following folders can be found in this project: 
 
-* documents: it has the presentations made during the development process together with the project documentation under the `documennts/thesis-doc/main.pdf` file.
-* experiments: the data associated with the experiments run.
-* webots-project: Webots project containing the code used.
+* **documents**: it has the presentations made during the development process together with the project documentation under the `documennts/thesis-doc/main.pdf` file.
+* **experiments**: the data associated with the experiments run.
+* **webots-project**: Webots project containing the code used.
 
 This README is oriented to guide the user or the developer through the installation process. 
 
@@ -26,13 +26,13 @@ This README is oriented to guide the user or the developer through the installat
 You are a user who wants to have the application running and you are not interested in the code so this section is just for you.
 
 1. Download Webots2020a from [here](https://github.com/cyberbotics/webots/releases/tag/R2020a) and install it.
-2. Download Python 3.7 from [here](https://www.python.org/downloads/release/python-377/) and install it if you do not have done it already. DO NOT USE `brew` command to install Python because you may have several premission problems while running it from Webots.
+2. Download Python 3.7 from [here](https://www.python.org/downloads/release/python-377/) and install it if you do not have done it already. **DO NOT** USE `brew` command to install Python because you may have several premission problems while running it from Webots.
 3. Clone this repository into your local machine typing `git clone https://github.com/joangerard/webots-thesis` in a terminal.
-4.  Install the Python library dependencies.
+4.  Install the Python library dependencies following these instructions:
 
     4.1. It is highly recomended to install a virtual environment in python to isolate the libraries installation.
 
-    4.2.  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install virtual environment.
+    4.2.  In order to install a virtual environment please open a terminal and go to the recently cloned repository directory. Then go to the path `webots-project/controllers/pos-prediction` and install a virtual environment with this command.
 
           // For MacOs and Linux:
           python3 -m pip install --user virtualenv
@@ -40,7 +40,7 @@ You are a user who wants to have the application running and you are not interes
           // For Windows:
           py -m pip install --user virtualenv
 
-    4.3.  Create a new environment using the command:
+    4.3.  Create a new environment called `env` (or whatever name fits for you) using the command:
 
           //For MacOs and Linux:
           python3 -m venv env
@@ -61,17 +61,17 @@ You are a user who wants to have the application running and you are not interes
 
           // For MacOS and Linux:
           which python
-
-          .../env/bin/python
+          .../env/bin/python <-- you should see this in your terminal
 
           // For Windows:
           where python
-          
-          .../env/bin/python.exe
+          .../env/bin/python.exe <-- you should see this in your terminal
 
     4.6.  Now that you have your venvironment up and it is activated install all the project dependencies on it.  
-          Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.  
-          This command will install all the project dependencies which are in the `requirements.txt` file.
+
+      Go to the path `webots-project/controllers/pos-prediction` and run the command `pip install -r requirements.txt`.  
+
+      This command will install all the project dependencies which are in the `requirements.txt` file.
 
 5.  Go to the folder `webots-project/worlds` you will see two worlds:
     * `pos-prediction-user.wbt`: This world has configured to run the robot controller inside the Webots tool.
