@@ -1,6 +1,7 @@
 # Robot Positioning Estimation using ML techniques
 
-This project is about robot positioning estimation using:
+This project was developed as a master thesis with the [Machine Learning Group at ULB](mlg.ulb.ac.be). 
+It deals with the local robot positioning estimation using:
 * Webots robot simulator: Webots2020a
 * Python 3.7
 * Machine Learning Libraries for Python such that Tensorflow and Keras.
