@@ -28,7 +28,8 @@ webots-project/plugins/robot_windows/pos-prediction/node_modules/*
 *.pckl
 *checkpoint.ipynb
 */presentation/*.pdf
+documents/presentation*/presentation/*.pdf
+documents/presentation*/*.pdf
 */*/*/venv
-*.pdf
 *.eps
 
