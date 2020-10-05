@@ -1,0 +1,15 @@
+Translation
+No resampling: 8.66
+1: 2.29
+2: 2.24
+4: 2.56
+8: 2.81
+Odometry: 9.68
+
+Rotation
+No resampling: 54.45
+1: 8.70
+2: 9.31
+4: 9.49
+8: 11.18
+Odometry: 21.48

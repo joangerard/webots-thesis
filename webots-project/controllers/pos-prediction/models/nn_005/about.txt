@@ -1,0 +1,5 @@
+models with sensor error look up table:
+0	0	0.05
+10	10	0.05
+
+1125965 data samples collected and train neural network, check document for mor information.

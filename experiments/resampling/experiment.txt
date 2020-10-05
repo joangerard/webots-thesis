@@ -1,0 +1,9 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+2000 steps
+static path
+
+directory = "resampling"
+files = ["err_0.pkl","err_1.pkl","err_2.pkl","err_4.pkl", "err_8.pkl", "err_odo.pkl"]
+labels = ["No resampling", "1","2","4","8","Odometry"]

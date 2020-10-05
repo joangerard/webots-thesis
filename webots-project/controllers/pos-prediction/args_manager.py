@@ -41,6 +41,9 @@ class ArgsManager:
         self.parser.add_argument("--capture_data", action="store_true",
                                  help="Capture data mode on")
 
+        self.parser.add_argument("--global_localization", action="store_true",
+                                 help="Global localization problem")
+
 
     def process_args(self):
         args = self.parser.parse_args()
@@ -56,6 +59,7 @@ class ArgsManager:
         pred_odo_file='data_odo_error.pckl'
         go_straiht_move=False
         capturing_data=False
+        global_localization=False
 
         if args.initx:
             init_x = args.initx
@@ -81,6 +85,8 @@ class ArgsManager:
             go_straiht_move = args.go_straight
         if args.capture_data:
             capturing_data = args.capture_data
+        if args.global_localization:
+            global_localization = args.global_localization
 
         return Params(init_x,
                       init_y,
@@ -93,4 +99,5 @@ class ArgsManager:
                       pred_error_file,
                       pred_odo_file,
                       go_straiht_move,
-                      capturing_data)
+                      capturing_data,
+                      global_localization)

@@ -54,7 +54,7 @@ class Predictor:
                 # print('err', elem)
                 # print('true', true_dist[ix])
 
-                err += (elem - true_dist[ix]) ** 2
+                err += abs((elem - true_dist[ix])) ** 2
 
         return err, bad_data
 

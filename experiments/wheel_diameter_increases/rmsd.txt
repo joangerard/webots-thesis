@@ -1,0 +1,3 @@
+Particles: 2.67
+Odometry: Dynamic Wheel Diameter: 15.03
+Odometry: Fixed Wheel Diameter: 9.68

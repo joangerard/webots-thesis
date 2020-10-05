@@ -1,0 +1,14 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+2000 steps
+static path
+
+Error on sensors
+0.2
+0.05
+
+
+directory = "err_sensors"
+files = ["err_02.pkl","err_005.pkl", "err_odo.pkl"]
+labels = ["0.2", "0.05", "Odometry"]

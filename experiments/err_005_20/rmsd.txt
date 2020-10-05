@@ -1,0 +1,5 @@
+30 particles: 3.83
+100 particles: 3.26
+500 particles: 2.74
+1000 particles: 2.66
+Odometry: 9.68

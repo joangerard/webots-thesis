@@ -1,0 +1,10 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+P = 0.05, ..., 3
+2000 steps
+static path
+
+directory = "err_p_pos"
+files = ["err_005.pkl","err_05.pkl","err_1.pkl", "err_2.pkl", "err_3.pkl", "err_odo.pkl"]
+labels = ["0.05","0.5","1","2","3","Odometry"]

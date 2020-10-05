@@ -14,13 +14,14 @@ class Params:
                  pred_error_file='data_pred_error.pckl',
                  pred_odo_file='data_odo_error.pckl',
                  go_straiht_move=False,
-                 capturing_data=False):
+                 capturing_data=False,
+                 global_localization=False):
         self.MAX_SPEED = 6
         self.TIME_STEP = 8
         self.WHEEL_RADIUS = 0.05
         self.SAMPLING_PERIOD = 10
-        self.MAX_X = 2
-        self.MAX_Y = 1.5
+        self.MAX_X = 3
+        self.MAX_Y = 3
         self.ENCODER_UNIT = 159.23
         self.INIT_X = init_x
         self.INIT_Y = init_y
@@ -37,3 +38,4 @@ class Params:
         self.PARTICLES_NUMBER = particles_number
         self.SIGMA_XY = sigma_xy
         self.SIGMA_THETA = sigma_theta
+        self.GLOBAL_LOCALIZATION = global_localization

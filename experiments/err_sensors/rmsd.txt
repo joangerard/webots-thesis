@@ -1,0 +1,11 @@
+Translation
+
+0.2: 2.64
+0.05: 2.15
+Odometry: 9.68
+
+
+Rotation
+0.2: 8.68
+0.05: 9.45
+Odometry: 21.48

@@ -76,10 +76,10 @@ class RobotManager:
         self.positionLeft.enable(self.timestep)
 
     def robot_to_xy(self, x, y):
-        return x+1, y+0.75
+        return x+1.5, y+1.5
 
     def xy_to_robot(self, x, y):
-        return x-1.00000, y-0.750000
+        return x-1.5, y-1.5
 
     def init_robot_pos(self, x, y):
         x, y = self.xy_to_robot(x, y)
@@ -171,6 +171,173 @@ class RobotManager:
         self.robot_rotation.setSFRotation([0, 1, 0, new_theta])
         self.robot_sup.resetPhysics()
 
+    def force_move(self, step):
+        """
+        Path for the small arena 2x1.5
+        :param step:
+        :return:
+        """
+        if step == 1:
+            return '{"code": "stop_randomness"}'
+        if step == 2:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 200:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 230:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 400:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 450:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 800:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 820:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1000:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 1030:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1200:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 1250:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1700:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 1750:
+            return '{"code": "move", "direction": "UP"}'
+        return None
+
+    def force_move_complex(self, step):
+        """
+        Path for the bigger arena of 3x3 not symetric: world called 'complex'
+        :param step:
+        :return:
+        """
+        if step == 1:
+            return '{"code": "stop_randomness"}'
+        if step == 2:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 35:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 950:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 982:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1400:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 1432:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1900:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 1933:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 2300:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 2333:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 2700:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 2733:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 2833:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 2866:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 3700:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 3730:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 3830:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 3865:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 4200:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 4233:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 4500:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 4532:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 4850:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 4883:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 5050:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 5082:
+            return '{"code": "move", "direction": "UP"}'
+        # if step == 6000:
+        #     return '{"code": "move", "direction": "RIGHT"}'
+        # if step == 6032:
+        #     return '{"code": "move", "direction": "UP"}'
+        # if step == 6250:
+        #     return '{"code": "move", "direction": "RIGHT"}'
+        # if step == 6282:
+        #     return '{"code": "move", "direction": "UP"}'
+        return None
+
+    def force_big_complex_2(self, step):
+        """
+        Path for the symetric arena 3x3: world called 'complex-2'
+        :param step:
+        :return:
+        """
+        if step == 1:
+            return '{"code": "stop_randomness"}'
+        if step == 2:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 65:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 350:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 382:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 600:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 632:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 850:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 883:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 1650:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 1682:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 2000:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 2033:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 2600:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 2632:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 3000:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 3032:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 3600:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 3632:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 4000:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 4033:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 4800:
+            return '{"code": "move", "direction": "LEFT"}'
+        if step == 4832:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 5080:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 5112:
+            return '{"code": "move", "direction": "UP"}'
+        if step == 5300:
+            return '{"code": "move", "direction": "RIGHT"}'
+        if step == 5332:
+            return '{"code": "move", "direction": "UP"}'
+
     def execute(self):
         self.init_actuators()
         self.init_robot_pos(self.params.INIT_X, self.params.INIT_Y)
@@ -189,17 +356,22 @@ class RobotManager:
 
         errorPos = []
         errorOdo = []
+
+        errorPosTheta = []
+        errorOdoTheta = []
+
         continue_running = True
 
         # principal robot step cycle
         while(continue_running):
 
             # if the number of steps is greater than EXPERIMENT_DURATION_STEPS then stop running
-            if count == self.params.EXPERIMENT_DURATION_STEPS:
+            if count == self.params.EXPERIMENT_DURATION_STEPS and not self.params.CAPTURING_DATA:
                 continue_running = False
 
             # receive message from robot window
             message = self.window_communicator.receiveMessage()
+            # message = self.force_big_complex_2(count)
             message = json.loads(message) if message else None
 
             if message and message['code'] == 'start_randomness':
@@ -214,6 +386,8 @@ class RobotManager:
                                                                          self.y_pred[-1],
                                                                          self.theta_pred[-1]))
 
+            # odometry.wheel_diameter_right += 0.000007
+            # odometry.wheel_diameter_left += 0.000007
             # get odometry data
             odometry_info, delta_movement = odometry.track_step(self.params.ENCODER_UNIT * (self.positionLeft.getValue()),
                                                                 self.params.ENCODER_UNIT * (self.positionRight.getValue()))
@@ -259,6 +433,8 @@ class RobotManager:
             self.motorLeft.setVelocity(left_speed)
             self.motorRight.setVelocity(right_speed)
 
+            # print(self.x[-1], self.y[-1], self.theta[-1])
+
             # predict position based on particles data
             if not self.params.CAPTURING_DATA and count % self.params.PRED_STEPS == 0 and count != 0:
                 # get particles
@@ -284,16 +460,25 @@ class RobotManager:
                 self.y_pred.append(y_prim)
                 self.theta_pred.append(theta_prim)
 
-                # predictor.refit_models(x[-1], y[-1], theta[-1], distance_sensors_info[-1])
+                # self.predictor.refit_models(self.x_pred[-1], self.y_pred[-1], self.theta_pred[-1], self.distance_sensors_info[-1])
 
                 # calculate error
                 if self.params.CALCULATE_PRED_ERROR:
                     errorPos.append(np.sqrt((self.x[-1] - self.x_pred[-1]) ** 2 + (self.y[-1] - self.y_pred[-1]) ** 2))
+                    errorPosTheta.append(np.sqrt((self.theta[-1] - self.theta_pred[-1]) ** 2))
 
             if self.params.CALCULATE_ODO_ERROR:
                 errorOdo.append(np.sqrt((self.x[-1] - self.x_odometry[-1]) ** 2 + (self.y[-1] - self.y_odometry[-1]) ** 2))
+                errorOdoTheta.append(np.sqrt((self.theta[-1] - self.theta_odometry[-1]) ** 2))
 
             # send data to html page
+            # if count == self.params.EXPERIMENT_DURATION_STEPS:
+            if self.params.GLOBAL_LOCALIZATION:
+                self.x_odometry = []
+                self.y_odometry = []
+                self.x_pred = []
+                self.y_pred = []
+
             self.window_communicator.sendCoordinatesParticles(self.x, self.y, self.x_odometry, self.y_odometry, self.x_pred, self.y_pred, particles.tolist())
 
             # move robot to a random position after a while
@@ -304,8 +489,8 @@ class RobotManager:
 
         if self.params.CALCULATE_PRED_ERROR:
             print('Saving prediction SDE')
-            pickle.dump(errorPos, open(self.params.PRED_ERROR_FILE, "wb"))
+            pickle.dump([errorPos, errorPosTheta], open(self.params.PRED_ERROR_FILE, "wb"))
 
         if self.params.CALCULATE_ODO_ERROR:
             print('Saving odometry SDE')
-            pickle.dump(errorOdo, open(self.params.ODO_ERROR_FILE, "wb"))
+            pickle.dump([errorOdo, errorOdoTheta], open(self.params.ODO_ERROR_FILE, "wb"))

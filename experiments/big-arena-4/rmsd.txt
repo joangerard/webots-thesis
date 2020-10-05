@@ -1,0 +1,10 @@
+Angles
+
+Particles: 134.59
+Odometry: 146.73
+
+Translation
+
+Particles: 5.24
+Odometry: 22.41
+

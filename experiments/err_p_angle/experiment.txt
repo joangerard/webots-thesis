@@ -1,0 +1,10 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+2000 steps
+static path
+
+
+directory = "err_p_angle"
+files = ["err_1.pkl", "err_2.pkl", "err_3.pkl"]
+labels = ["1","2","3"]

@@ -1,0 +1,4 @@
+Sigma_xy = 0.005
+sigma_theta = 20
+2000 steps
+static path

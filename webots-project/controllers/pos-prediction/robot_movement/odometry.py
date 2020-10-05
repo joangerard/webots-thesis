@@ -28,6 +28,10 @@ class Odometry:
         self.wheel_conversion_right = self.wheel_diameter_right * self.scaling_factor * np.pi / self.increments_per_tour
 
     def track_step(self, pos_left, pos_right):
+        # self.wheel_distance = self.axis_wheel_ratio * self.scaling_factor * (self.wheel_diameter_left
+        #                                                                      + self.wheel_diameter_right) / 2
+        # self.wheel_conversion_left = self.wheel_diameter_left * self.scaling_factor * np.pi / self.increments_per_tour
+        # self.wheel_conversion_right = self.wheel_diameter_right * self.scaling_factor * np.pi / self.increments_per_tour
 
         delta_pos_left = int(pos_left - self.wheels_state.pos_left_prev)
         delta_pos_right = int(pos_right - self.wheels_state.pos_right_prev)

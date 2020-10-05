@@ -1,25 +1,38 @@
 import matplotlib.pyplot as plt
 import pickle
 
-data30 = pickle.load(open("data/data_theta_30.pckl", "rb"))
-data100 = pickle.load(open("data/data_theta_100.pckl", "rb"))
-data500 = pickle.load(open("data/data_theta_500.pckl", "rb"))
-data2000 = pickle.load(open("data/data_theta_2000.pckl", "rb"))
-dataOdo = pickle.load(open("data/data_theta_odo.pckl", "rb"))
+def getCumulativeError(data):
+    cumulativeErrors = []
+    cumulativeError = 0
+    for x in data:
+        cumulativeError += x
+        cumulativeErrors.append(cumulativeError)
+    
+    return cumulativeErrors
 
-x = range(0, 2201)
-#
-plot30, = plt.plot(x, data30, label="30")
-plot100, = plt.plot(x, data100, label="100")
-plot500, = plt.plot(x, data500, label="500")
-plot2000, = plt.plot(x, data2000, label="2000")
-plotOdo, = plt.plot(x, dataOdo, label="Odometry")
-#
+directory = "err_angles_sigma_theta"
+files = ["err_0005.pkl", "err_05.pkl", "err_1.pkl", "err_20.pkl", "err_odo.pkl"]
+labels = ["0.005","0.5","1", "20", "Odometry"]
+num_samples = 2000
+
+data = []
+
+for file in files:
+   data.append(pickle.load(open("%s/%s" % (directory, file), "rb"))) 
+
+x = range(0, num_samples)
+
+plots = []
+for idx, label in enumerate(labels):
+    plot, = plt.plot(x, getCumulativeError(data[idx])[:2000], label=label)
+    plots.append(plot)
+
+
 # plt.ylim(0, 2.0)
 
-plt.legend(handles=[plot30, plot100, plot500, plot2000, plotOdo])
-
+plt.legend(handles=[plot for plot in plots])
+#
 plt.xlabel("Time Steps")
-plt.ylabel("Error (degrees)")
-
+plt.ylabel("Cumulative Error")
+#
 plt.savefig('particles-angles-error.png')

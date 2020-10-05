@@ -1,15 +1,6 @@
 import matplotlib.pyplot as plt
 import pickle
 
-data30 = pickle.load(open("data30/data_30.pckl", "rb"))
-data100 = pickle.load(open("data30/data_100.pckl", "rb"))
-data500 = pickle.load(open("data30/data_500.pckl", "rb"))
-data30norm = pickle.load(open("data30/data_30_refit.pckl", "rb"))
-data2000 = pickle.load(open("data30/data_2000.pckl", "rb"))
-dataOdo = pickle.load(open("data30/data_odo.pckl", "rb"))
-
-x = range(0, 1000)
-
 def getCumulativeError(data):
     cumulativeErrors = []
     cumulativeError = 0
@@ -18,19 +9,33 @@ def getCumulativeError(data):
         cumulativeErrors.append(cumulativeError)
     
     return cumulativeErrors
-#
-plot30, = plt.plot(x, getCumulativeError(data30), label="30")
-plot30_norm, = plt.plot(x, getCumulativeError(data30norm), label="30 refit")
-plot100, = plt.plot(x, getCumulativeError(data100), label="100")
-plot500, = plt.plot(x, getCumulativeError(data500), label="500")
-plot2000, = plt.plot(x, getCumulativeError(data2000), label="2000")
-plotOdo, = plt.plot(x, getCumulativeError(dataOdo[:1000]), label="Odometry")
-#
-# plt.ylim(0, 2.0)
 
-plt.legend(handles=[plot30, plot30_norm, plot100, plot500, plot2000, plotOdo])
+def plot(data, labels, ylabel, name):
+    plots = []
+    
+    for idx, label in enumerate(labels):
+        num_samples = len(data[idx])
+        x = range(0, num_samples)
+        plot, = plt.plot(x, getCumulativeError(data[idx]), label=label)
+        plots.append(plot)
 
-plt.xlabel("Time Steps")
-plt.ylabel("Cumulative Error (cm)")
+    plt.legend(handles=[plot for plot in plots])
+    plt.xlabel("Time Steps")
+    plt.ylabel(ylabel)
+    plt.savefig(name)
+    plt.close()
 
-plt.savefig('particles-distance-error.png')
+directory = "big-arena-4"
+files = ["part.pkl", "odo.pkl"]
+labels = ["Particles", "Odometry"]
+
+data_position = []
+data_rotation = []
+
+for file in files:
+    data = pickle.load(open("%s/%s" % (directory, file), "rb"))
+    data_position.append(data[0])
+    data_rotation.append(data[1])
+
+plot(data_position, labels, "Cumulative Error (cm)", 'particles-distance-error.png')
+plot(data_rotation, labels, "Cumulative Error", 'particles-rotation-error.png')

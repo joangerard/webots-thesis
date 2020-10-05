@@ -1,0 +1,10 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+2000 steps
+static path
+
+3 sensors -> missing
+8 sensors -> not missing
+
+

@@ -1,0 +1,14 @@
+Sigma_xy = 0.0025
+sigma_theta = 1
+n_particles = 1000
+2000 steps
+static path
+
+3 sensors -> missing
+8 sensors -> not missing
+
+
+
+directory = "err_sensor_missing"
+files = ["missing.pkl","not-missing.pkl", "err_odo.pkl"]
+labels = ["3 sensors", "8 sensors", "Odometry"]

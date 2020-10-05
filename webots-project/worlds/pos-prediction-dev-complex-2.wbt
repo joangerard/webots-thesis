@@ -1,0 +1,314 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.3935516897241143 -0.8089574257849986 -0.43669777968590934 1.8817009678509848
+  position -4.177038094604411 6.245465147061155 -0.7933924265508369
+}
+TexturedBackgroundLight {
+}
+TexturedBackground {
+}
+DEF e-puck Robot {
+  children [
+    Compass {
+    }
+    Transform {
+      translation 0 0.0415 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.0820075 0.364731 0.8
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis -1 0 0
+        anchor 0 0.025 0
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+          consumptionFactor 70
+        }
+        PositionSensor {
+          name "left wheel sensor"
+        }
+      ]
+      endPoint Solid {
+        translation -0.04499999999989253 0.025 0
+        rotation -1 0 0 0
+        children [
+          DEF WHEEL Transform {
+            rotation 0 0 1 1.57
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.01
+                  radius 0.025
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics DEF PHYSICS_WHEEL Physics {
+          density -1
+          mass 0.05
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis -1 0 0
+        anchor 0 0.025 0
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+          consumptionFactor 70
+        }
+        PositionSensor {
+          name "right wheel sensor"
+        }
+      ]
+      endPoint Solid {
+        translation 0.044999998400928 0.025003865829176117 9.02903240455194e-17
+        rotation -1 0 0 0
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics USE PHYSICS_WHEEL
+      }
+    }
+    DistanceSensor {
+      translation 0.02 0.063 -0.042
+      rotation 0 1 0 1.1781
+      children [
+        DEF SENSOR Transform {
+          rotation 0 0 1 1.57
+          children [
+            Shape {
+              appearance PBRAppearance {
+                baseColor 0.975691 0.981481 0.0252992
+                roughness 1
+                metalness 0
+              }
+              geometry Cylinder {
+                height 0.004
+                radius 0.008
+              }
+            }
+          ]
+        }
+      ]
+      name "ds0"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation 0.042 0.063 -0.02
+      rotation 0 1 0 0.3927
+      children [
+        USE SENSOR
+      ]
+      name "ds1"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation 0.042 0.063 0.02
+      rotation 0 1 0 5.8905
+      children [
+        USE SENSOR
+      ]
+      name "ds2"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation 0.02 0.063 0.042
+      rotation 0 1 0 5.1051
+      children [
+        USE SENSOR
+      ]
+      name "ds3"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation -0.02 0.063 0.042
+      rotation 0 1 0 4.3197
+      children [
+        USE SENSOR
+      ]
+      name "ds4"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation -0.042 0.063 0.02
+      rotation 0 1 0 3.5343
+      children [
+        USE SENSOR
+      ]
+      name "ds5"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation -0.042 0.063 -0.02
+      rotation 0 1 0 2.7489
+      children [
+        USE SENSOR
+      ]
+      name "ds6"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      type "laser"
+      aperture 0.005
+    }
+    DistanceSensor {
+      translation -0.02 0.063 -0.042
+      rotation 0 1 0 1.9635
+      children [
+        USE SENSOR
+      ]
+      name "ds7"
+      lookupTable [
+        0 0 0.05
+        10 10 0.05
+      ]
+      aperture 0.005
+    }
+    DEF SMILE Transform {
+      translation 0 0.025 -0.036
+      rotation 0.7745972408364944 0.44721228048294853 0.4472139204829502 1.8234794
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.721569 0.290196 0.290196
+            roughness 1
+            metalness 0
+          }
+          geometry Cylinder {
+            height 0.018
+            radius 0.009
+            subdivision 3
+          }
+        }
+      ]
+    }
+    Transform {
+      rotation 0 1 0 3.14
+      children [
+        USE SMILE
+      ]
+    }
+  ]
+  name "Robot"
+  boundingObject Transform {
+    translation 0 0.0415 0
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+    density -1
+    mass 0.5
+  }
+  controller "<extern>"
+  supervisor TRUE
+  window "pos-prediction"
+}
+RectangleArena {
+  floorSize 3 3
+  floorAppearance ChequeredParquetry {
+    textureTransform TextureTransform {
+    }
+  }
+  wallHeight 0.3
+}
+Wall {
+  translation 1 0 -0.5
+  size 1 0.3 0.001
+}
+Wall {
+  translation -0.25 0 -1
+  name "wall(4)"
+  size 1.5 0.3 0.001
+}
+Wall {
+  translation -0.25 0 1
+  name "wall(7)"
+  size 1.5 0.3 0.001
+}
+Wall {
+  translation -0.75 0 0
+  name "wall(6)"
+  size 1.5 0.3 0.001
+}
+Wall {
+  translation 1 0 0.5
+  name "wall(1)"
+  size 1 0.3 0.001
+}
+Wall {
+  translation 0.9 0 -1.15
+  rotation 0 1 0 1.57
+  name "wall(5)"
+  size 0.7 0.3 0.001
+}
+Wall {
+  translation 0.9 0 1.15
+  rotation 0 1 0 1.57
+  name "wall(2)"
+  size 0.7 0.3 0.001
+}
+Wall {
+  translation 0.5 0 0
+  rotation 0 1 0 1.57
+  name "wall(3)"
+  size 2 0.3 0.001
+}

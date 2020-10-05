@@ -1,0 +1,11 @@
+Sigma_xy = 0.0025
+sigma_theta = 20
+n_particles = 30,100,500,1000
+2000 steps
+static path
+
+Cumulative error on the angle
+
+directory = "err_angles_0025_20"
+files = ["err_30.pkl", "err_100.pkl", "err_500.pkl", "err_1000.pkl", "err_odo.pkl"]
+labels = ["30","100","500", "1000", "Odometry"]

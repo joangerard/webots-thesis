@@ -1,0 +1,11 @@
+Translation
+
+3 sensors: 6.83
+8 sensors: 2.31
+Odometry: 9.68
+
+Rotation
+
+3 sensors: 11.48
+8 sensors: 9.32
+Odometry: 21.48

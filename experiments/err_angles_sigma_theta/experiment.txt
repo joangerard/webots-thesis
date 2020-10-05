@@ -1,0 +1,10 @@
+Sigma_xy = 0.0025
+sigma_theta = 0.005, 1, 20
+n_particles = 1000
+2000 steps
+static path
+
+
+directory = "err_angles_sigma_theta"
+files = ["err_0005.pkl", "err_1.pkl", "err_20.pkl", "err_odo.pkl"]
+labels = ["0.005","1", "20", "Odometry"]
