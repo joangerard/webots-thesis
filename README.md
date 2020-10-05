@@ -16,8 +16,8 @@ It deals with the local robot positioning estimation using:
 
 The following folders can be found in this project: 
 
-* **documents**: it has the presentations made during the development process together with the project documentation under the `documennts/thesis-doc/main.pdf` file.
-* **experiments**: the data associated with the experiments run.
+* **documents**: it has the presentations made during the development process together with the project documentation under the `documennts/master-thesis-joan-gerard-2020.pdf` file.
+* **experiments**: the data and scripts associated with the experiments run.
 * **webots-project**: Webots project containing the code used.
 
 This README is oriented to guide the user or the developer through the installation process. 
@@ -74,9 +74,9 @@ You are a user who wants to have the application running and you are not interes
 
       This command will install all the project dependencies which are in the `requirements.txt` file.
 
-5.  Go to the folder `webots-project/worlds` you will see two worlds:
-    * `pos-prediction-user.wbt`: This world has configured to run the robot controller inside the Webots tool.
-    * `pos-prediction-dev.wbt`: This world has configured to run the robot controller outside the Webots tool using an IDE or Python Command lines, etc. 
+5.  Go to the folder `webots-project/worlds` you will see several worlds where the experiments were made. The most interesting ones are:
+    * `pos-prediction-dev-complex-user.wbt`: This world has configured to run the robot controller inside the Webots tool.
+    * `pos-prediction-dev-complex-dev.wbt`: This world has configured to run the robot controller outside the Webots tool using an IDE or Python Command lines, etc. 
 
     In this section the file called `pos-prediction-user.wbt` will be used. Open it with a double click should lunch the Webots application and the world will be load into it. 
 
@@ -140,7 +140,7 @@ The robot window plugin was programmed using JavaScript 6 and it is under the di
       *N.B.* Make sure you selected the interpreter that is associated with your virtual environment. In the picture below, the virtual environment is called `pos-prediction` and it was created with the IDE selecting the option `File/Project Structure.../SDKs` and click on `+` sign to add another one. This is equivalent to the venv command previously used. It has the same purpose of isolating the installed libraries.
 
 
-4. Open the `webots-project/worlds/pos-prediction-dev.wbt` using Webots(a right click is usually enough) and click on the play button. This will do nothing but wait an external controller to run the simulation.
+4. Open the `webots-project/worlds/pos-prediction-dev-complex-dev.wbt` using Webots(a right click is usually enough) and click on the play button. This will do nothing but wait an external controller to run the simulation.
 
 5. Run the `pos-prediction.py` file on IntelliJ. You can simply press the `Run` button or right click on the file name and press `Run`.
 
@@ -160,7 +160,7 @@ usage: pos-prediction.py [-h] [--initx INITX] [--inity INITY]
                          [--calculate_odo_error]
                          [--pred_error_file PRED_ERROR_FILE]
                          [--pred_odo_file PRED_ODO_FILE] [--go_straight]
-                         [--capture_data]
+                         [--capture_data] [--global_localization]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -183,6 +183,9 @@ optional arguments:
                         Name of the file where to save the odometry error
   --go_straight         Let the robot go straight
   --capture_data        Capture data mode on
+  --global_localization
+                        Global localization problem
+
 ```
 
 #### Examples of Arguments
