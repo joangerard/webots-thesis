@@ -1,0 +1,183 @@
+\documentclass{beamer}
+
+\mode<presentation>{
+\usetheme{Dresden}
+\setbeamercovered{transparent}
+\usecolortheme{lsc}
+}
+
+\mode<handout>{
+  % tema simples para ser impresso
+  \usepackage[bar]{beamerthemetree}
+  % Colocando um fundo cinza quando for gerar transparências para serem impressas
+  % mais de uma transparência por página
+  \beamertemplatesolidbackgroundcolor{black!5}
+}
+
+\usepackage{amsmath,amssymb}
+\usepackage[brazil]{varioref}
+\usepackage[english,brazil]{babel}
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{colortbl}
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\newcommand\Fontvi{\fontsize{6}{10}\selectfont}
+
+\beamertemplatetransparentcovereddynamic
+
+\title[Machine Learning for Probabilistic Robotics with Webots]{Machine Learning for Probabilistic Robotics with Webots}
+\author[Joan Gerard]{%
+  Joan Gerard\inst{1} \\
+  Promotor: Prof. Gianluca Bontempi \inst{1}}
+  \institute[ULB]{
+  \inst{1}%
+     Universit\'e Libre de Bruxelles}
+
+% Se comentar a linha abaixo, irá aparecer a data quando foi compilada a apresentação  
+\date{March 9, 2020}
+
+\AtBeginSection[]{
+  \begin{frame}<beamer>
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+\section{Neural Network Model: Coordinates $\rightarrow$ Sensor}
+\frame{
+	\frametitle{Configuration}
+	\begin{itemize}
+		\item 8 neural networks used
+		\item Each neural network is trained using the $(x, y, \theta)$ coordinates as input and one sensor measurement as output for each model: $s_1, s_2, ..., s_8$.
+		\item Many NN architectures were tested. The one that gave best results was:
+		\begin{itemize}
+			\item Input Layer: 3 neurons
+			\item Intermediate Layer: Fully connected with 10 neurons
+			\item Intermediate Layer: Fully connected with 6 neurons
+			\item Intermediate Layer: Fully connected with 3 neurons
+			\item Output Layer: 1 neuron
+		\end{itemize}
+	\end{itemize}
+}
+
+\frame{
+	\frametitle{Configuration}
+	\begin{itemize}
+		\item Dropdown intermediate layers with 0.2, 0.3 and 0.5 were added.
+		\item L2, L1 weight regularization were also added with learning rate of 0.1, 0.01 and 0.001.
+		\item Both: Dropdown and L2, L1 weight regularization performed worst than the previously described model: the MAE decreased suddenly from first epoch to second and then it remained constant.
+		
+		\item Optimizer: rmsprop
+		\item Activation: relu
+		\item Metrics: MAE
+		\item Loss: MSE
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=3cm]{MAE}{figs/mae.png}
+\pgfdeclareimage[height=3cm]{LOSS}{figs/loss.png}
+\frame{
+	\frametitle{Results}
+	\begin{itemize}
+		\item 150 epochs
+		\item 5-fold
+		\item Final model was taken with 75 epochs
+		\item For sensor 1:
+	\end{itemize}
+	\pgfuseimage{MAE}
+	\pgfuseimage{LOSS}
+}
+
+\section{Neural Network Model: Sensors $\rightarrow$ Coordinates}
+
+\frame{
+	\frametitle{Configuration}
+	\begin{itemize}
+		\item A neural network model that predicts the $(x,y,\theta)$ coordinates given the sensor measurements as input is created to be combined together with the previously described models.
+		\item The neural network architecture is as follows:
+		\begin{itemize}
+			\item Input Layer: 8 neurons (the sensors measurements)
+			\item Intermediate Layer: Fully connected with 10 neurons
+			\item Output Layer: 3 neurons (the coordinates)
+		\end{itemize}
+		\item Optimizer: rmsprop
+		\item Activation: relu
+		\item Metrics: MAE
+		\item Loss: MSE
+	\end{itemize}
+}
+
+\pgfdeclareimage[height=3cm]{MAE2}{figs/mae2.png}
+\pgfdeclareimage[height=3cm]{LOSS2}{figs/loss2.png}
+\frame{
+	\frametitle{Results}
+	\begin{itemize}
+		\item 150 epochs
+		\item 5-fold
+		\item Final model was taken with 20 epochs
+	\end{itemize}
+	\pgfuseimage{MAE2}
+	\pgfuseimage{LOSS2}
+}
+
+\section{Particles Filter: Weighted Average}
+\frame{
+	\begin{itemize}
+		\item The weighted average is taken among all the particles to select the corrected robot state.
+		\begin{center}
+			 $\hat{s_t} = \sum_{i=1}^n w_t^i * s_t^i$
+		\end{center}
+		\item Where:
+		\begin{itemize}
+			\item $n$ is the number of particles
+			\item $\hat{s_t}$ is the estimated state at time $t$
+			\item $w_t^i$ is the weight at time $t$ of particle $i$
+			\item $s_t^i$ is the state at time $t$ of particle $i$
+		\end{itemize}
+	\end{itemize}
+}
+
+\section{Combination of models}
+
+\frame{
+	\begin{itemize}
+		\item Let $\hat{s_t}$ be the prediction state given by the particles filter.
+		\item Let $\hat{s_t^\prime}$ be the prediction state given by the second model (Sesors $\rightarrow$ Coordinates).
+		\item The final model was calculated averaging both: $\frac{\hat{s_t} + \hat{s_t^\prime}}{2}$
+	\end{itemize}
+}
+
+\section{Results}
+\pgfdeclareimage[height=2.9cm]{RES1}{figs/res1.png}
+\pgfdeclareimage[height=2.9cm]{RES2}{figs/res2.png}
+\pgfdeclareimage[height=2.9cm]{RES3}{figs/res3.png}
+\frame{
+	\begin{itemize}
+		\item Right: Particles filter only. $n=1000; \sigma_{x,y}=0.00045; \sigma_\theta=2.5$
+		\item Center: Particles filter only. $n=100; \sigma_{x,y}=0.0045; \sigma_\theta=2.5$
+		\item Left: Particles filter + Second Model. $n=100; \sigma_{x,y}=0.0045; \sigma_\theta=2.5$
+	\end{itemize}
+	\pgfuseimage{RES1}
+	\pgfuseimage{RES2}
+	\pgfuseimage{RES3}
+}
+
+
+\end{document}
