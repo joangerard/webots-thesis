@@ -12,7 +12,7 @@ It deals with the local robot positioning estimation using:
 ![Application](https://github.com/joangerard/webots-thesis/blob/master/img/particles.gif "Application")
 
 [Youtube demo here.](https://www.youtube.com/watch?v=fISDutZca5g)
-
+[Youtube demo + presentation here.](https://youtu.be/mf-OTZD2aak)
 
 The following folders can be found in this project: 
 
